@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "484807657475",
+    "project_id": "sharepoint-dc313",
+    "storage_bucket": "sharepoint-dc313.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484807657475:android:6c4ddf7de4c10577f96636",
+        "android_client_info": {
+          "package_name": "com.tees.mad.e4089074.sharepoint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm_Jypwf-mCIS20G975UFxsCZTsrXU7AQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
