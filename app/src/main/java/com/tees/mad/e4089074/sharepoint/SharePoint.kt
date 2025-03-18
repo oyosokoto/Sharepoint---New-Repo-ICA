@@ -12,11 +12,6 @@ import com.tees.mad.e4089074.sharepoint.ui.screens.auth.LoginScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.SignupScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.WelcomeScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.DashboardScreen
-import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.HomeScreen
-import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.NotificationScreen
-import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.TransactionHistoryScreen
-import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment.PaymentScreen
-import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.profile.ProfileScreen
 
 
 @Composable
