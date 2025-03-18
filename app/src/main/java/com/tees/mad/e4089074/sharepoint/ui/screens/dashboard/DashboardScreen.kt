@@ -6,18 +6,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
 import com.tees.mad.e4089074.sharepoint.ui.components.BottomNavigationBar
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.HomeScreen
+import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.NotificationScreen
+import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.TransactionHistoryScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment.PaymentScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.profile.ProfileScreen
 import com.tees.mad.e4089074.sharepoint.util.BottomTabItem
@@ -25,105 +25,74 @@ import com.tees.mad.e4089074.sharepoint.util.BottomTabItem
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
-
     Scaffold(bottomBar = {
         BottomNavigationBar(navController, bottomTabItems)
     }) { innerPadding ->
-
         Box(modifier = Modifier.padding(innerPadding)) {
-            // This NavHost will handle the navigation between the bottom tabs
-            // and their nested screens
+            // This NavHost handles navigation within Dashboard
             NavHost(
                 navController = navController,
-                startDestination = AppRoute.DashboardTab.HomeTab.route
+                startDestination = AppRoute.Dashboard.HomeTab.route
             ) {
                 // Home Tab Graph
                 navigation(
-                    route = AppRoute.DashboardTab.HomeTab.route,
-                    startDestination = AppRoute.HomeNestedScreens.Home.createRoute(AppRoute.DashboardTab.HomeTab.route)
+                    route = AppRoute.Dashboard.HomeTab.route,
+                    startDestination = AppRoute.Dashboard.HomeTab.Home.route
                 ) {
-                    composable(AppRoute.HomeNestedScreens.Home.createRoute(AppRoute.DashboardTab.HomeTab.route)) {
-                        HomeScreen(
-                            Modifier.padding(innerPadding),
-                            navController
-                        )
+                    composable(AppRoute.Dashboard.HomeTab.Home.route) {
+                        HomeScreen(modifier, navController)
                     }
-//                    composable(HomeNestedScreens.Notifications.createRoute(AppRoute.DashboardTab.HomeTab.route)) {
-//                        NotificationsScreen(
-//                            onBackPressed = { navController.navigateUp() }
-//                        )
-//                    }
-//                    composable(HomeNestedScreens.TransactionHistory.createRoute(AppRoute.DashboardTab.HomeTab.route)) {
-//                        TransactionHistoryScreen(
-//                            onBackPressed = { navController.navigateUp() }
-//                        )
-//                    }
+                    composable(AppRoute.Dashboard.HomeTab.Notifications.route) {
+                        NotificationScreen(modifier, navController)
+                    }
+                    composable(AppRoute.Dashboard.HomeTab.TransactionHistory.route) {
+                        TransactionHistoryScreen(modifier, navController)
+                    }
                 }
 
                 // Payments Tab Graph
                 navigation(
-                    route = AppRoute.DashboardTab.PaymentsTab.route,
-                    startDestination = AppRoute.PaymentsNestedScreens.AddPayment.createRoute(
-                        AppRoute.DashboardTab.PaymentsTab.route
-                    )
+                    route = AppRoute.Dashboard.PaymentsTab.route,
+                    startDestination = AppRoute.Dashboard.PaymentsTab.AddPayment.route
                 ) {
-                    composable(AppRoute.PaymentsNestedScreens.AddPayment.createRoute(AppRoute.DashboardTab.PaymentsTab.route)) {
-                        PaymentScreen(
-                            Modifier.padding(innerPadding),
-                            navController
-                        )
+                    composable(AppRoute.Dashboard.PaymentsTab.AddPayment.route) {
+                        PaymentScreen(modifier, navController)
                     }
-//                    composable(PaymentsNestedScreens.PaymentDetails.createRoute(AppRoute.DashboardTab.PaymentsTab.route) + "/{paymentId}") { backStackEntry ->
-//                        val paymentId = backStackEntry.arguments?.getString("paymentId")
-//                        PaymentDetailsScreen(
-//                            paymentId = paymentId,
-//                            onBackPressed = { navController.navigateUp() }
-//                        )
-//                    }
-//                    composable(PaymentsNestedScreens.AddPayment.createRoute(AppRoute.DashboardTab.PaymentsTab.route)) {
-//                        AddPaymentScreen(
-//                            onBackPressed = { navController.navigateUp() },
-//                            onPaymentAdded = { navController.navigateUp() }
-//                        )
-//                    }
+
                 }
 
                 // Profile Tab Graph
                 navigation(
-                    route = AppRoute.DashboardTab.ProfileTab.route,
-                    startDestination = AppRoute.ProfileNestedScreens.ProfileInfo.createRoute(
-                        AppRoute.DashboardTab.ProfileTab.route
-                    )
+                    route = AppRoute.Dashboard.ProfileTab.route,
+                    startDestination = AppRoute.Dashboard.ProfileTab.ProfileInfo.route
                 ) {
-                    composable(AppRoute.ProfileNestedScreens.ProfileInfo.createRoute(AppRoute.DashboardTab.ProfileTab.route)) {
-                        ProfileScreen(
-                            Modifier.padding(innerPadding),
-                            navController
-                        )
+                    composable(AppRoute.Dashboard.ProfileTab.ProfileInfo.route) {
+                        ProfileScreen(modifier, navController)
                     }
+
                 }
             }
         }
     }
-
 }
+
 
 val bottomTabItems = listOf(
     BottomTabItem(
         title = "Home",
-        route = AppRoute.DashboardTab.HomeTab.route,
+        route = AppRoute.Dashboard.HomeTab.route,
         icon = Icons.Default.Home
     ),
     BottomTabItem(
         title = "Payments",
-        route = AppRoute.DashboardTab.PaymentsTab.route,
+        route = AppRoute.Dashboard.PaymentsTab.route,
         icon = Icons.Default.Payments
     ),
     BottomTabItem(
         title = "Profile",
-        route = AppRoute.DashboardTab.ProfileTab.route,
+        route = AppRoute.Dashboard.ProfileTab.route,
         icon = Icons.Default.Person
     )
 )

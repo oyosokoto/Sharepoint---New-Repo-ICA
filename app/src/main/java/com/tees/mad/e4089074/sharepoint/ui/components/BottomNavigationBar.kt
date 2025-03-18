@@ -22,7 +22,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
 import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.BottomTabItem
@@ -32,33 +31,32 @@ fun BottomNavigationBar(
     navController: NavHostController = rememberNavController(),
     items: List<BottomTabItem>
 ) {
-
     // Apply elevation with a Surface
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shadowElevation = 8.dp,
+        shadowElevation = 10.dp,
         color = White
     ) {
         NavigationBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp),
-            containerColor = White, // White background for the entire bar
-            tonalElevation = 0.dp // Remove the default elevation as we're using Surface for it
+            containerColor = White,
+            tonalElevation = 0.dp
         ) {
             val currentBackStackEntry = navController.currentBackStackEntryAsState().value
             val currentRoute = currentBackStackEntry?.destination?.route
 
-            // Check if the current route belongs to one of our tab graphs
+            // Check if the current route belongs to one of our tab graphs using the updated route structure
             val currentTab = when {
-                currentRoute?.startsWith(AppRoute.DashboardTab.HomeTab.route) == true ->
-                    AppRoute.DashboardTab.HomeTab.route
+                currentRoute?.startsWith("dashboard/home") == true ->
+                    AppRoute.Dashboard.HomeTab.route
 
-                currentRoute?.startsWith(AppRoute.DashboardTab.PaymentsTab.route) == true ->
-                    AppRoute.DashboardTab.PaymentsTab.route
+                currentRoute?.startsWith("dashboard/payments") == true ->
+                    AppRoute.Dashboard.PaymentsTab.route
 
-                currentRoute?.startsWith(AppRoute.DashboardTab.ProfileTab.route) == true ->
-                    AppRoute.DashboardTab.ProfileTab.route
+                currentRoute?.startsWith("dashboard/profile") == true ->
+                    AppRoute.Dashboard.ProfileTab.route
 
                 else -> null
             }

@@ -15,12 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.Card
@@ -40,43 +37,48 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.tees.mad.e4089074.sharepoint.R
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
-import com.tees.mad.e4089074.sharepoint.ui.components.TransactionCard
+import com.tees.mad.e4089074.sharepoint.ui.components.BalanceCard
+import com.tees.mad.e4089074.sharepoint.ui.components.TransactionList
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple80
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.AppTransactionData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
     // Sample data for transactions
     val transactions = remember {
-        listOf(
-            AppTransactionData(
-                businessName = "Crystals Coffe Shop",
-                amount = 14.99f,
-                podderCount = 4,
-                date = "Mar 15, 2025",
-                logo = R.drawable.placeholder_logo
-            ),
-            AppTransactionData(
-                businessName = "D & D Restaurant",
-                amount = 16.99f,
-                podderCount = 6,
-                date = "Mar 10, 2025",
-                logo = R.drawable.placeholder_logo
-            ),
-            AppTransactionData(
-                businessName = "Hot Wings",
-                amount = 1800.00f,
-                podderCount = 3,
-                date = "Mar 01, 2025",
-                logo = R.drawable.placeholder_logo
-            )
+        listOf<AppTransactionData>(
+//            AppTransactionData(
+//                businessName = "Crystals Coffe Shop",
+//                amount = 14.99f,
+//                podderCount = 4,
+//                date = "Mar 15, 2025",
+//                logo = R.drawable.placeholder_logo
+//            ),
+//            AppTransactionData(
+//                businessName = "D & D Restaurant",
+//                amount = 16.99f,
+//                podderCount = 6,
+//                date = "Mar 10, 2025",
+//                logo = R.drawable.placeholder_logo
+//            ),
+//            AppTransactionData(
+//                businessName = "Hot Wings",
+//                amount = 1800.00f,
+//                podderCount = 3,
+//                date = "Mar 01, 2025",
+//                logo = R.drawable.placeholder_logo
+//            )
         )
     }
 
@@ -104,7 +106,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                         .size(52.dp)
                         .clip(CircleShape)
                         .border(2.dp, White, CircleShape)
-                        .clickable { navController.navigate(AppRoute.Dashboard.Profile.route) }
+                        .clickable {
+                            navController.navigate(AppRoute.Dashboard.ProfileTab.ProfileInfo.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -123,7 +131,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 // Notification and account buttons
                 Row {
                     IconButton(
-                        onClick = { /* Notification action */ },
+                        onClick = {
+                            navController
+                                .navigate(
+                                    AppRoute
+                                        .Dashboard.HomeTab.Notifications.route
+                                )
+                        },
                         modifier = Modifier
                             .size(44.dp)
                             .background(White, CircleShape)
@@ -134,81 +148,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                             tint = Color.Black
                         )
                     }
-
-
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Balance Card -
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Purple80
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 10.dp
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "GBP",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Black
-                        )
-
-                        IconButton(
-                            onClick = { },
-                            modifier = Modifier.size(28.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.VisibilityOff,
-                                contentDescription = "Hide Balance",
-                                tint = Color.Black.copy(alpha = 0.7f)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "Total Transaction Summary",
-                        fontSize = 12.sp,
-                        color = Color.Black.copy(alpha = 0.7f)
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = "£6,887.09",
-                        fontSize = 42.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "Total : £23,887.09 ",
-                        fontSize = 12.sp,
-                        color = Color.Black
-                    )
-                }
-            }
+            BalanceCard()
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -217,7 +163,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(90.dp)
-                    .clickable { /* Handle join pod */ },
+                    .clickable {
+                        navController.navigate(AppRoute.Dashboard.PaymentsTab.AddPayment.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
+                    },
                 colors = CardDefaults.cardColors(
                     containerColor = PurpleDeep
                 ),
@@ -274,7 +226,9 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     color = Color.Black
                 )
 
-                TextButton(onClick = { /* View all transactions */ }) {
+                TextButton(onClick = {
+                    navController.navigate(AppRoute.Dashboard.HomeTab.TransactionHistory.route)
+                }) {
                     Text(
                         text = "See All",
                         fontSize = 14.sp,
@@ -286,15 +240,24 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Transaction items
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                items(transactions) { transaction ->
-                    TransactionCard(transaction)
-                }
+            transactions.isNotEmpty().takeIf { it }?.let {
+                Text(
+                    text = "Every Red is an amount saved!",
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 24.dp)
+                )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Transaction items
+            TransactionList(transactions.subList(0, 0))
+
+
         }
     }
 }
