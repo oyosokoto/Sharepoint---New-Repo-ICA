@@ -1,15 +1,64 @@
-*.iml
-.gradle
+# Gradle-related files
+.gradle/
+*/build/
+!gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+
+# Local configuration
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+/.idea/
+*.iml
+*.ipr
+*.iws
+
+# Log files and temporary files
+*.log
+*.tmp
+*.swp
+*.lock
+
+# Android-specific exclusions
+/.cxx/
+/captures/
+/output.json
+.navigation.json
+*.keystore
+*.jks
+
+# Generated files
+*.apk
+*.aab
+*.dex
+*.jar
+*.so
+*.class
+
+# Firebase & Google Services
+/google-services.json
+/app/google-services.json
+/.env
+
+# Test reports
+/test_output/
+*.bin
+*.lprof
+
+# Exclude dependency caches
+**/node_modules/
+/.yarn/
+/.pnpm-store/
+
+# Exclude Mac & Linux system files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+*.orig
+Thumbs.db
+
+# JetBrains (Android Studio) specific
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/libraries
+
+# Ignore NDK related files
+/.externalNativeBuild/
