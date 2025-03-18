@@ -145,7 +145,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Rounded.Notifications,
                             contentDescription = "Notifications",
-                            tint = Color.Black
+                            tint = PurpleDeep
                         )
                     }
                 }
