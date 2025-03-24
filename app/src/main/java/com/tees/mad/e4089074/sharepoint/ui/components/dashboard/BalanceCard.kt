@@ -1,4 +1,4 @@
-package com.tees.mad.e4089074.sharepoint.ui.components
+package com.tees.mad.e4089074.sharepoint.ui.components.dashboard
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +38,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple80
 import com.tees.mad.e4089074.sharepoint.util.formatNumber
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -99,7 +100,7 @@ fun BalanceCard(
                     onClick = {
                         isBalanceVisible = !isBalanceVisible
                         // Save the new visibility state to DataStore
-                        kotlinx.coroutines.MainScope().launch {
+                        MainScope().launch {
                             context.dataStore.edit { preferences ->
                                 preferences[BALANCE_VISIBILITY_KEY] = isBalanceVisible
                             }

@@ -1,4 +1,4 @@
-package com.tees.mad.e4089074.sharepoint.ui.components
+package com.tees.mad.e4089074.sharepoint.ui.components.pods
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
