@@ -1,167 +1,125 @@
 package com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple80
-import kotlinx.coroutines.launch
+import com.tees.mad.e4089074.sharepoint.ui.components.pods.EmptyPodsState
+import com.tees.mad.e4089074.sharepoint.ui.components.pods.JoinPodDialog
+import com.tees.mad.e4089074.sharepoint.ui.components.pods.PodCard
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
+import com.tees.mad.e4089074.sharepoint.ui.theme.White
+import com.tees.mad.e4089074.sharepoint.util.PodDetails
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PaymentScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
+    val pods = remember { mutableStateListOf<PodDetails>() }
+    var showJoinPodDialog by remember { mutableStateOf(false) }
     var podCode by remember { mutableStateOf("") }
-    var showPodDetails by remember { mutableStateOf(false) }
-    var showWrongCode by remember { mutableStateOf(false) }
-    val podDetails = remember {
-        mutableStateOf(PodDetails("12345", "The Best Pod", "10"))
-    }
+    var isCodeError by remember { mutableStateOf(false) }
 
-    Scaffold {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { showBottomSheet = true },
-                colors = ButtonDefaults.buttonColors(containerColor = Purple40),
-                modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showJoinPodDialog = true },
+                containerColor = PurpleDeep
             ) {
-                Text("Join Pod", color = Color.White)
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Join Pod",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                sheetState = bottomSheetState,
-                onDismissRequest = { showBottomSheet = false },
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = Purple80
+    ) { paddingValues ->
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            color = White
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    OutlinedTextField(
-                        value = podCode,
-                        onValueChange = {
-                            podCode = it
-                            showWrongCode = false
-                        },
-                        label = { Text("Enter Pod Code") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (showWrongCode) {
-                        Text(
-                            text = "Wrong Pod Code",
-                            color = Color.Red
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            if (podCode == podDetails.value.code) {
-                                showPodDetails = true
-                                scope.launch { bottomSheetState.hide() }
-                                showBottomSheet = false
-                            } else {
-                                showWrongCode = true
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple40)
-                    ) {
-                        Text(text = "Validate Code", color = Color.White)
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Payment Pods",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    color = PurpleDeep
+                )
 
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple40)
+                if (pods.isEmpty()) {
+                    EmptyPodsState(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Text(text = "Scan QR Code", color = Color.White)
+                        items(pods) { pod ->
+                            PodCard(pod = pod)
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
-        if (showPodDetails) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Purple40, RoundedCornerShape(8.dp)),
-            ) {
-                Text(
-                    text = "Pod Code: ${podDetails.value.code}",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Text(
-                    text = "Pod Name: ${podDetails.value.name}",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Text(
-                    text = "Total Participants: ${podDetails.value.participants}",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
+
+        if (showJoinPodDialog) {
+            JoinPodDialog(
+                podCode = podCode,
+                isError = isCodeError,
+                onPodCodeChange = {
+                    podCode = it
+                    isCodeError = false
+                },
+                onDismiss = { showJoinPodDialog = false },
+                onScanQrCode = { /* Implement QR scanning */ },
+                onJoin = {
+                    if (podCode.isNotBlank() && podCode.length >= 4) {
+                        // In a real app, you would validate with an API
+                        val newPod = PodDetails(
+                            code = podCode,
+                            name = "Pod ${podCode.takeLast(4)}",
+                            participants = (5..20).random().toString()
+                        )
+                        pods.add(newPod)
+                        podCode = ""
+                        showJoinPodDialog = false
+                    } else {
+                        isCodeError = true
+                    }
+                }
+            )
         }
     }
-}
-
-data class PodDetails(val code: String, val name: String, val participants: String)
-
-@Preview(showBackground = true)
-@Composable
-fun PaymentScreenPreview() {
-    PaymentScreen()
 }

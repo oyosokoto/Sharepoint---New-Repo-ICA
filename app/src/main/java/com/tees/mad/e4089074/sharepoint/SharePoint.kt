@@ -1,7 +1,9 @@
 package com.tees.mad.e4089074.sharepoint
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,16 +14,20 @@ import com.tees.mad.e4089074.sharepoint.ui.screens.auth.LoginScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.SignupScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.WelcomeScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.DashboardScreen
+import com.tees.mad.e4089074.sharepoint.viewmodels.AuthState
+import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
 
 
 @Composable
 fun SharePoint(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
+    val authState = authViewModel.authState.collectAsState()
     NavHost(
         navController = navController,
-        startDestination = if (false) AppRoute.Auth.route else AppRoute.Dashboard.route,
+        startDestination = if (authState.value is AuthState.Authenticated) AppRoute.Dashboard.route else AppRoute.Auth.route
     ) {
         // Auth Flow
         navigation(
@@ -29,13 +35,13 @@ fun SharePoint(
             route = AppRoute.Auth.route
         ) {
             composable(AppRoute.Auth.Welcome.route) {
-                WelcomeScreen(modifier, navController)
+                WelcomeScreen(modifier, navController, authViewModel)
             }
             composable(AppRoute.Auth.Login.route) {
-                LoginScreen(modifier, navController)
+                LoginScreen(modifier, navController, authViewModel)
             }
             composable(AppRoute.Auth.Register.route) {
-                SignupScreen(modifier, navController)
+                SignupScreen(modifier, navController, authViewModel)
             }
         }
 

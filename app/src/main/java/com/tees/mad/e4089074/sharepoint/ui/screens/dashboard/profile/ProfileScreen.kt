@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tees.mad.e4089074.sharepoint.R
-import com.tees.mad.e4089074.sharepoint.ui.components.ProfileStat
-import com.tees.mad.e4089074.sharepoint.ui.components.SettingsItem
+import com.tees.mad.e4089074.sharepoint.ui.components.profile.ProfileStat
+import com.tees.mad.e4089074.sharepoint.ui.components.profile.SettingsItem
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
@@ -207,7 +207,7 @@ fun ProfileScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
             // Logout button
             Button(

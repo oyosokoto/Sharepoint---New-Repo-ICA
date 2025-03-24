@@ -54,11 +54,13 @@ import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleGrey40
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
+import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
 
 @Composable
 fun SignupScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    authViewModel: AuthViewModel,
 ) {
     val gradient = Brush.verticalGradient(
         colors = listOf(
@@ -82,14 +84,14 @@ fun SignupScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Back button
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)
+                    .padding(top = 30.dp)
             ) {
                 IconButton(
                     onClick = { navController.popBackStack() },

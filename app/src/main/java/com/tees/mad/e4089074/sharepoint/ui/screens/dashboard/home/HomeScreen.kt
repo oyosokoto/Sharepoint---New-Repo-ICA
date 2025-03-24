@@ -42,7 +42,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tees.mad.e4089074.sharepoint.R
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
-import com.tees.mad.e4089074.sharepoint.ui.components.BalanceCard
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.BalanceCard
 import com.tees.mad.e4089074.sharepoint.ui.components.TransactionList
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep

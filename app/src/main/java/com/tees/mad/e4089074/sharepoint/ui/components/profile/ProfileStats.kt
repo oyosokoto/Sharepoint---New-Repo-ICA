@@ -1,4 +1,4 @@
-package com.tees.mad.e4089074.sharepoint.ui.components
+package com.tees.mad.e4089074.sharepoint.ui.components.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
