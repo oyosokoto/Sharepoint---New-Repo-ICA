@@ -90,7 +90,7 @@ fun AppTextInput(
             keyboardType = if (isPassword) KeyboardType.Password else keyboardType,
             imeAction = imeAction
         ),
-        visualTransformation = if (fieldVisibility) {
+        visualTransformation = if (isPassword && fieldVisibility) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None

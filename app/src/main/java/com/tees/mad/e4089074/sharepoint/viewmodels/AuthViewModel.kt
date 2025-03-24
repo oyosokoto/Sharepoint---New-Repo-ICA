@@ -1,90 +1,68 @@
 package com.tees.mad.e4089074.sharepoint.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.tees.mad.e4089074.sharepoint.util.isValidateEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AuthViewModel : ViewModel() {
-    private val auth = FirebaseAuth.getInstance();
+    private val auth = FirebaseAuth.getInstance()
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
-    var authState: StateFlow<AuthState> = _authState
+    val authState: StateFlow<AuthState> = _authState
 
     private val _authResult = MutableStateFlow<AuthResult?>(null)
-    var authResult: StateFlow<AuthResult?> = _authResult
+    val authResult: StateFlow<AuthResult?> = _authResult
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
-        checkAuthState()
-
         auth.addAuthStateListener { firebaseAuth ->
-            val currentUser = firebaseAuth.currentUser
-            if (currentUser != null) {
-                _authState.value = AuthState.Authenticated(currentUser)
-            } else {
-                _authState.value = AuthState.Unauthenticated
-            }
-        }
-    }
-
-    private fun checkAuthState() {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            _authState.value = AuthState.Authenticated(currentUser)
-        } else {
-            _authState.value = AuthState.Unauthenticated
+            _authState.value = firebaseAuth.currentUser?.let { AuthState.Authenticated(it) }
+                ?: AuthState.Unauthenticated
         }
     }
 
     fun login(email: String, password: String) {
+        if (!validateCredentials(email, password)) return
         viewModelScope.launch {
-            try {
-                if (email.isEmpty() || password.isEmpty()) throw Exception("Email and password cannot be empty")
-                if (!isValidateEmail(email)) throw Exception("Email passed is not a valid email address")
-                _isLoading.value = true
-                _authResult.value = null
-                auth.signInWithEmailAndPassword(email, password)
-                _authResult.value = AuthResult.Success
-            } catch (e: Exception) {
-                Log.e("AuthViewModel", "Login Failed", e)
-                _authResult.value = AuthResult.Error(e.message ?: "Login Failed")
-            } finally {
-                _isLoading.value = false
+            performAuthAction("Login Failed") {
+                auth.signInWithEmailAndPassword(email, password).await()
             }
         }
     }
 
     fun register(firstName: String, lastName: String, email: String, password: String) {
+        if (!validateRegistration(firstName, lastName, email, password)) return
         viewModelScope.launch {
-            try {
-                if (email.isEmpty() || password.isEmpty()) throw Exception("Email and password cannot be empty")
-                if (firstName.isEmpty() || lastName.isEmpty()) throw Exception("First and last name cannot be empty")
-                _isLoading.value = true  // Set loading to true when starting
-                _authResult.value = null
-                // Create user with email and password
-                val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            performAuthAction("Registration failed") {
+                val result = auth.createUserWithEmailAndPassword(email, password).await()
+                result.user?.updateProfile(
+                    UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName")
+                        .build()
+                )?.await()
+            }
+        }
+    }
 
-                // Update display name with first and last name
-                val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName("$firstName $lastName")
-                    .build()
-
-                authResult.user?.updateProfile(profileUpdates)?.await()
-                _authResult.value = AuthResult.Success
-            } catch (e: Exception) {
-                Log.e("AuthViewModel", "Registration failed", e)
-                _authResult.value = AuthResult.Error(e.message ?: "Registration failed")
-            } finally {
-                _isLoading.value = false  // Set loading to false when finished
+    fun sendPasswordResetEmail(email: String) {
+        if (email.isBlank()) {
+            _authResult.value = AuthResult.Error("Email cannot be empty")
+            return
+        }
+        if (!isValidEmail(email)) {
+            _authResult.value = AuthResult.Error("Invalid email format")
+            return
+        }
+        viewModelScope.launch {
+            performAuthAction("Failed to send reset email") {
+                auth.sendPasswordResetEmail(email).await()
             }
         }
     }
@@ -98,21 +76,60 @@ class AuthViewModel : ViewModel() {
         _authResult.value = null
     }
 
-    // For password reset functionality
-    fun sendPasswordResetEmail(email: String) {
-        viewModelScope.launch {
-            try {
-                _isLoading.value = true
-                _authResult.value = null
-                auth.sendPasswordResetEmail(email).await()
-                _authResult.value = AuthResult.Success
-            } catch (e: Exception) {
-                Log.e("AuthViewModel", "Password reset failed", e)
-                _authResult.value = AuthResult.Error(e.message ?: "Failed to send reset email")
-            } finally {
-                _isLoading.value = false
+    private suspend fun performAuthAction(errorMessage: String, action: suspend () -> Unit) {
+        try {
+            _isLoading.value = true
+            _authResult.value = null
+            action()
+            _authResult.value = AuthResult.Success
+        } catch (e: FirebaseAuthException) {
+            if (e.localizedMessage?.contains("The supplied auth credential is incorrect, malformed or has expired.") == true) {
+                _authResult.value = AuthResult.Error("Invalid email or password")
+            } else {
+                _authResult.value = AuthResult.Error(e.localizedMessage ?: errorMessage)
             }
+        } catch (e: Exception) {
+            _authResult.value = AuthResult.Error(errorMessage)
+        } finally {
+            _isLoading.value = false
         }
+    }
+
+    private fun validateCredentials(email: String, password: String): Boolean {
+        return when {
+            email.isBlank() || password.isBlank() -> {
+                _authResult.value = AuthResult.Error("Email and password cannot be empty")
+                false
+            }
+
+            !isValidEmail(email) -> {
+                _authResult.value = AuthResult.Error("Invalid email format")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun validateRegistration(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ): Boolean {
+        return when {
+            firstName.isBlank() || lastName.isBlank() -> {
+                _authResult.value = AuthResult.Error("First and last name cannot be empty")
+                false
+            }
+
+            !validateCredentials(email, password) -> false
+            else -> true
+        }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
 
@@ -122,8 +139,6 @@ sealed class AuthResult {
 }
 
 sealed class AuthState {
-    object Loading : AuthState()
     object Unauthenticated : AuthState()
     data class Authenticated(val user: FirebaseUser) : AuthState()
-
 }

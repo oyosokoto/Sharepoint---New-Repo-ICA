@@ -32,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
 import com.tees.mad.e4089074.sharepoint.ui.components.forms.AppButton
@@ -56,6 +58,8 @@ import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.showToast
 import com.tees.mad.e4089074.sharepoint.viewmodels.AuthResult
 import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -67,17 +71,17 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var context = LocalContext.current
-    val isLoading by authViewModel.isLoading.collectAsState()
-    val authResult by authViewModel.authResult.collectAsState()
+    val isLoading by authViewModel.isLoading.collectAsStateWithLifecycle()
+    val authResult by authViewModel.authResult.collectAsStateWithLifecycle()
 
     LaunchedEffect(authResult) {
-        if (authResult != null) {
-            if (authResult is AuthResult.Error) {
-                showToast(context, (authResult as AuthResult.Error).message)
+        authResult?.let {
+            if (it is AuthResult.Error) {
+                showToast(context, it.message)
             }
+            delay(500)
             authViewModel.resetResult()
         }
-
     }
 
     Box(
@@ -143,6 +147,7 @@ fun LoginScreen(
                 leadingIcon = Icons.Default.Email,
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
+                fieldVisibility = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -184,7 +189,9 @@ fun LoginScreen(
             // Sign In Button
             AppButton(
                 Modifier,
-                onClick = { authViewModel.login(email, password) },
+                onClick = {
+                    authViewModel.login(email, password)
+                },
                 isLoading = isLoading
             )
 
