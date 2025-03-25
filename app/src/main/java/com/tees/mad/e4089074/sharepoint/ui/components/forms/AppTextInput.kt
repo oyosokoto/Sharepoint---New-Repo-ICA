@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tees.mad.e4089074.sharepoint.ui.theme.ErrorRed
 import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleGrey40
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
@@ -54,7 +54,7 @@ fun AppTextInput(
                 Icon(
                     imageVector = it,
                     contentDescription = "$label Icon",
-                    tint = if (error) ErrorRed else Purple40
+                    tint = if (error) ErrorRed else PurpleSoft
                 )
             }
         },
@@ -64,7 +64,7 @@ fun AppTextInput(
                     Icon(
                         imageVector = it,
                         contentDescription = "$label Trailing Icon",
-                        tint = if (error) ErrorRed else Purple40
+                        tint = if (error) ErrorRed else PurpleSoft
                     )
                 }
             }
@@ -77,9 +77,9 @@ fun AppTextInput(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (error) ErrorRed else PurpleDeep,
             unfocusedBorderColor = if (error) ErrorRed else PurpleGrey40.copy(alpha = 0.5f),
-            focusedLabelColor = if (error) ErrorRed else Purple40,
+            focusedLabelColor = if (error) ErrorRed else PurpleSoft,
             unfocusedLabelColor = if (error) ErrorRed else Gray,
-            cursorColor = if (error) ErrorRed else Purple40,
+            cursorColor = if (error) ErrorRed else PurpleSoft,
             focusedContainerColor = White.copy(alpha = 0.8f),
             unfocusedContainerColor = White.copy(alpha = 0.6f),
             errorBorderColor = ErrorRed,

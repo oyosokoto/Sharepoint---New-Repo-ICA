@@ -28,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,24 +38,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tees.mad.e4089074.sharepoint.R
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
-import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.BalanceCard
 import com.tees.mad.e4089074.sharepoint.ui.components.TransactionList
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.BalanceCard
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.AppTransactionData
+import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    profileViewModel: ProfileViewModel = viewModel(),
 ) {
+    val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
+
+
     // Sample data for transactions
     val transactions = remember {
         listOf<AppTransactionData>(
@@ -119,7 +127,7 @@ fun HomeScreen(
 
                 Column {
                     Text(
-                        text = "Hi, Samuel",
+                        text = "Hi, ${userProfile?.firstName ?: ""}",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black

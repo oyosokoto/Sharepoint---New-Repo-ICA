@@ -120,7 +120,7 @@ fun WelcomeScreen(
                     .width(180.dp),
                 shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40,
+                    containerColor = PurpleDeep,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(

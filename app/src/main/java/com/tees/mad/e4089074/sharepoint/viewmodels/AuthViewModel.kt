@@ -2,10 +2,16 @@ package com.tees.mad.e4089074.sharepoint.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.tees.mad.e4089074.sharepoint.util.AuthResult
+import com.tees.mad.e4089074.sharepoint.util.AuthState
+import com.tees.mad.e4089074.sharepoint.util.datamodels.ProfileInformation
+import com.tees.mad.e4089074.sharepoint.util.datamodels.UserProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -13,6 +19,8 @@ import kotlinx.coroutines.tasks.await
 
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
+
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
 
@@ -24,13 +32,15 @@ class AuthViewModel : ViewModel() {
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
-            _authState.value = firebaseAuth.currentUser?.let { AuthState.Authenticated(it) }
-                ?: AuthState.Unauthenticated
+            _authState.value = firebaseAuth.currentUser?.let {
+                AuthState.Authenticated(it)
+            } ?: AuthState.Unauthenticated
         }
     }
 
     fun login(email: String, password: String) {
         if (!validateCredentials(email, password)) return
+
         viewModelScope.launch {
             performAuthAction("Login Failed") {
                 auth.signInWithEmailAndPassword(email, password).await()
@@ -38,16 +48,58 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun register(firstName: String, lastName: String, email: String, password: String) {
+    fun register(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ) {
         if (!validateRegistration(firstName, lastName, email, password)) return
+
         viewModelScope.launch {
             performAuthAction("Registration failed") {
+                // Create user with email and password
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
+
+                // Update user profile with display name
                 result.user?.updateProfile(
-                    UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName")
+                    UserProfileChangeRequest.Builder()
+                        .setDisplayName("$firstName $lastName")
                         .build()
                 )?.await()
+
+                // Send email verification
+                result.user?.sendEmailVerification()?.await()
+
+                // Create user profile in Firestore
+                val userId = result.user?.uid ?: ""
+                val defaultProfile = ProfileInformation(
+                    userId = userId,
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    profileImage = "", // Default empty image
+                    notificationsEnabled = true
+                )
+
+                // Save profile to Firestore
+                firestore.collection("users")
+                    .document(userId)
+                    .set(defaultProfile)
+                    .await()
             }
+        }
+    }
+
+    fun getUserProfile(): UserProfile? {
+        val user = auth.currentUser
+        return user?.let {
+            UserProfile(
+                firstName = it.displayName?.substringBefore(" ") ?: "",
+                lastName = it.displayName?.substringAfter(" ") ?: "",
+                email = it.email ?: "",
+                profileImage = it.photoUrl?.toString() ?: ""
+            )
         }
     }
 
@@ -56,10 +108,12 @@ class AuthViewModel : ViewModel() {
             _authResult.value = AuthResult.Error("Email cannot be empty")
             return
         }
+
         if (!isValidEmail(email)) {
             _authResult.value = AuthResult.Error("Invalid email format")
             return
         }
+
         viewModelScope.launch {
             performAuthAction("Failed to send reset email") {
                 auth.sendPasswordResetEmail(email).await()
@@ -76,18 +130,52 @@ class AuthViewModel : ViewModel() {
         _authResult.value = null
     }
 
-    private suspend fun performAuthAction(errorMessage: String, action: suspend () -> Unit) {
+    fun changePassword(currentPassword: String, newPassword: String) {
+        val currentUser = auth.currentUser ?: run {
+            _authResult.value = AuthResult.Error("User not authenticated")
+            return
+        }
+
+        if (!isStrongPassword(newPassword)) {
+            _authResult.value = AuthResult.Error(
+                "New password must be at least 8 characters long and contain " +
+                        "at least one uppercase letter, one lowercase letter, " +
+                        "and one special character"
+            )
+            return
+        }
+
+        viewModelScope.launch {
+            performAuthAction("Unable to change password, please try again.") {
+                val credential =
+                    EmailAuthProvider.getCredential(currentUser.email!!, currentPassword)
+                currentUser.reauthenticate(credential).await()
+                currentUser.updatePassword(newPassword).await()
+            }
+        }
+    }
+
+    private suspend fun performAuthAction(
+        errorMessage: String,
+        action: suspend () -> Unit
+    ) {
         try {
             _isLoading.value = true
             _authResult.value = null
             action()
             _authResult.value = AuthResult.Success
         } catch (e: FirebaseAuthException) {
-            if (e.localizedMessage?.contains("The supplied auth credential is incorrect, malformed or has expired.") == true) {
-                _authResult.value = AuthResult.Error("Invalid email or password")
-            } else {
-                _authResult.value = AuthResult.Error(e.localizedMessage ?: errorMessage)
-            }
+            val errorText =
+                if (e
+                        .localizedMessage?.contains(
+                            "The supplied auth credential is incorrect, malformed or has expired."
+                        ) == true
+                ) {
+                    "Invalid email or password"
+                } else {
+                    e.localizedMessage ?: errorMessage
+                }
+            _authResult.value = AuthResult.Error(errorText)
         } catch (e: Exception) {
             _authResult.value = AuthResult.Error(errorMessage)
         } finally {
@@ -111,6 +199,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+
     private fun validateRegistration(
         firstName: String,
         lastName: String,
@@ -123,22 +212,33 @@ class AuthViewModel : ViewModel() {
                 false
             }
 
-            !validateCredentials(email, password) -> false
+            !isValidEmail(email) -> {
+                _authResult.value = AuthResult.Error("Invalid email format")
+                false
+            }
+
+            !isStrongPassword(password) -> {
+                _authResult.value = AuthResult.Error(
+                    "Password must be at least 8 characters long and contain " +
+                            "at least one uppercase letter, one lowercase letter, " +
+                            "and one special character"
+                )
+                false
+            }
+
             else -> true
         }
     }
 
+    private fun isStrongPassword(password: String): Boolean {
+        return password.length >= 8 &&
+                password.any { it.isUpperCase() } &&
+                password.any { it.isLowerCase() } &&
+                password.any { !it.isLetterOrDigit() }
+    }
+
+
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
-}
-
-sealed class AuthResult {
-    object Success : AuthResult()
-    data class Error(val message: String) : AuthResult()
-}
-
-sealed class AuthState {
-    object Unauthenticated : AuthState()
-    data class Authenticated(val user: FirebaseUser) : AuthState()
 }
