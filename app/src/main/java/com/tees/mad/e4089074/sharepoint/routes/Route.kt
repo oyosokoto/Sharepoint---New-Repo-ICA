@@ -6,6 +6,7 @@ sealed class AppRoute(open val route: String) {
         object Welcome : Auth("welcome")
         object Login : Auth("login")
         object Register : Auth("register")
+        object ForgotPassword : Auth("forgot_password")
 
         companion object {
             const val route = "auth"

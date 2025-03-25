@@ -10,11 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
+import com.tees.mad.e4089074.sharepoint.ui.screens.auth.ForgotPasswordScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.LoginScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.SignupScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.auth.WelcomeScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.DashboardScreen
-import com.tees.mad.e4089074.sharepoint.viewmodels.AuthState
+import com.tees.mad.e4089074.sharepoint.util.AuthState
 import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
 
 
@@ -42,6 +43,9 @@ fun SharePoint(
             }
             composable(AppRoute.Auth.Register.route) {
                 SignupScreen(modifier, navController, authViewModel)
+            }
+            composable(AppRoute.Auth.ForgotPassword.route) {
+                ForgotPasswordScreen(modifier, navController, authViewModel)
             }
         }
 

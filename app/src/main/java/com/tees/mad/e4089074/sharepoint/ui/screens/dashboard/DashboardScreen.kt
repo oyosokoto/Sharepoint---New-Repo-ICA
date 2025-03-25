@@ -8,7 +8,11 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +25,20 @@ import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home.TransactionHis
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment.PaymentScreen
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.profile.ProfileScreen
 import com.tees.mad.e4089074.sharepoint.util.BottomTabItem
+import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
+import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    authViewModel: AuthViewModel = viewModel(),
+    profileViewModel: ProfileViewModel = viewModel(),
 ) {
+    val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
+    LaunchedEffect(userProfile) {
+        profileViewModel.getUserProfile()
+    }
     Scaffold(bottomBar = {
         BottomNavigationBar(navController, bottomTabItems)
     }) { innerPadding ->
@@ -42,7 +54,7 @@ fun DashboardScreen(
                     startDestination = AppRoute.Dashboard.HomeTab.Home.route
                 ) {
                     composable(AppRoute.Dashboard.HomeTab.Home.route) {
-                        HomeScreen(modifier, navController)
+                        HomeScreen(modifier, navController, profileViewModel)
                     }
                     composable(AppRoute.Dashboard.HomeTab.Notifications.route) {
                         NotificationScreen(modifier, navController)
@@ -69,7 +81,7 @@ fun DashboardScreen(
                     startDestination = AppRoute.Dashboard.ProfileTab.ProfileInfo.route
                 ) {
                     composable(AppRoute.Dashboard.ProfileTab.ProfileInfo.route) {
-                        ProfileScreen(modifier, navController)
+                        ProfileScreen(modifier, navController, authViewModel, profileViewModel)
                     }
 
                 }
