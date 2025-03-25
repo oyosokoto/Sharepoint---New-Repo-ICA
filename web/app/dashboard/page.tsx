@@ -65,7 +65,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -92,7 +92,7 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-white dark:bg-dark-surface rounded-xl shadow-card dark:shadow-card-dark p-6 border-l-4 border-purple-600 transform transition-transform hover:scale-105 duration-300">
+        <div className="bg-white dark:bg-dark-surface rounded-xl shadow-card dark:shadow-card-dark p-6 border-l-4 border-primary-600 transform transition-transform hover:scale-105 duration-300">
           <div className="flex items-center mb-4">
             <div className="p-3 rounded-full bg-purple-50 dark:bg-purple-900/30 mr-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -184,7 +184,14 @@ export default function Dashboard() {
                       {pod.businessName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                      {pod.itemName} <span className="text-xs text-gray-500 dark:text-gray-400">(x{pod.quantity})</span>
+                      {pod.items && pod.items.length > 0 ? (
+                        <>
+                          {pod.items[0].name} <span className="text-xs text-gray-500 dark:text-gray-400">(x{pod.items[0].quantity})</span>
+                          {pod.items.length > 1 && <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">+{pod.items.length - 1} more</span>}
+                        </>
+                      ) : (
+                        <span className="text-gray-400">No items</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                       {formatCurrency(pod.totalAmount)}
@@ -265,7 +272,7 @@ export default function Dashboard() {
           <p className="text-gray-500 dark:text-gray-400 mb-4">View and manage all your existing payment pods</p>
           <Link
             href="/dashboard/pods"
-            className="mt-auto inline-flex items-center justify-center px-4 py-2 border border-purple-600 text-sm font-medium rounded-md text-purple-600 bg-white hover:bg-purple-50 dark:bg-dark-surface dark:hover:bg-purple-900/10 dark:text-purple-400 w-full transition-colors duration-200"
+            className="mt-auto inline-flex items-center justify-center px-4 py-2 border border-primary-600 text-sm font-medium rounded-md text-purple-600 bg-white hover:bg-purple-50 dark:bg-dark-surface dark:hover:bg-purple-900/10 dark:text-purple-400 w-full transition-colors duration-200"
           >
             View All Pods
           </Link>

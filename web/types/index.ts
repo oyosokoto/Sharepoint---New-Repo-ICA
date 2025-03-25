@@ -1,12 +1,20 @@
+export interface PodItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
 export interface PaymentPod {
   id?: string;
   businessName: string;
-  itemName: string;
-  itemPrice: number;
-  quantity: number;
+  items: PodItem[];
   totalAmount: number;
   podderCount: number;
   amountPerPodder: number;
+  splitType?: string;
+  splitAmounts?: number[];
   podCode: string;
   createdAt: Date | string;
   createdBy: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
@@ -10,8 +10,14 @@ export default function Login() {
   const [password, setPassword] = useState('Admin123!');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +51,7 @@ export default function Login() {
           <div className="bg-white dark:bg-dark-surface rounded-2xl shadow-xl overflow-hidden">
             <div className="px-6 py-8 sm:p-10">
               <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+                <h2 className="text-3xl font-extrabold text-gray-900 dark:text-black">
                   Business Portal
                 </h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -138,7 +144,7 @@ export default function Login() {
             </div>
 
             <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-xs text-center text-gray-500 dark:text-gray-400">
+              <div className="text-xs text-center text-gray-500 dark:text-white">
                 By signing in, you agree to our Terms of Service and Privacy Policy
               </div>
             </div>

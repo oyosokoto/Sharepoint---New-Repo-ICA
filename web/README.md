@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SharePoint - Simplified Group Payment Solution
 
-## Getting Started
+SharePoint is a modern web application designed to simplify the process of splitting bills and managing shared expenses. Whether you're a restaurant owner, a group of friends dining out, or roommates sharing household expenses, SharePoint makes it easy to create, manage, and settle shared payments.
 
-First, run the development server:
+![SharePoint Logo](public/sharepoint-logo.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### For Businesses
+- **Create Payment Pods**: Generate payment pods with multiple items and quantities
+- **Flexible Payment Splitting**: Choose between equal split, random split, or let customers choose their amounts
+- **QR Code Generation**: Easily share payment pods with customers via QR codes
+- **Pod Management**: Track active and closed payment pods
+- **Multi-Item Support**: Add multiple items with different prices and quantities to a single pod
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### For Customers
+- **Join Payment Pods**: Easily join a payment pod using a unique code or QR scan
+- **View Itemized Bills**: See exactly what items are included in the shared expense
+- **Fair Split Calculation**: Automatically calculate each person's share of the bill
+- **Payment Tracking**: Keep track of who has paid their share
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Technology Stack
 
-## Learn More
+- **Frontend**: Next.js, React, TailwindCSS
+- **Backend**: Firebase (Authentication, Firestore)
+- **Deployment**: Vercel
 
-To learn more about Next.js, take a look at the following resources:
+## 📋 Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
+- Node.js (v14 or later)
+- npm or yarn
+- Firebase account
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/sharepoint.git
+   cd sharepoint
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Set up environment variables:
+   Create a `.env.local` file in the root directory with the following variables:
+   ```
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+
+## 📱 Usage
+
+### For Businesses
+
+1. **Sign up/Login**: Create an account or log in to your existing account
+2. **Create a Payment Pod**: 
+   - Enter your business name
+   - Add multiple items with their prices and quantities
+   - Specify the number of people sharing the bill
+3. **Share the Pod**: Share the generated QR code or pod code with your customers
+4. **Manage Pods**: View all your pods, check their status, and close them when complete
+
+### For Customers
+
+1. **Join a Pod**: Enter the pod code or scan the QR code provided by the business
+2. **View Details**: See all items in the pod and your share of the bill
+3. **Mark as Paid**: Indicate when you've paid your share
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+- Developed as an ICA project for Teesside University
+- Created by etherofgodd
