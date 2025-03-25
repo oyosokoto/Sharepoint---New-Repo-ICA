@@ -38,6 +38,10 @@
 /google-services.json
 /app/google-services.json
 /.env
+/web/.env.local
+/web/.env.development.local
+/web/.env.test.local
+/web/.env.production.local
 
 # Test reports
 /test_output/
@@ -48,6 +52,15 @@
 **/node_modules/
 /.yarn/
 /.pnpm-store/
+
+# Next.js specific
+/.next/
+/web/.next/
+/web/out/
+/web/build/
+/web/dist/
+/web/.turbo/
+/web/.vercel/
 
 # Exclude Mac & Linux system files
 .DS_Store
