@@ -19,6 +19,7 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.abs
 
 class PaymentPodViewModel : ViewModel() {
     private val TAG = "PaymentPodViewModel"
@@ -444,7 +445,7 @@ class PaymentPodViewModel : ViewModel() {
 
             // Check if total of all custom amounts equals the pod total
             val poddersSnapshot = firestore.collection("pods")
-                .document(pod.id ?: "")
+                .document(pod.id)
                 .collection("podders")
                 .get()
                 .await()
@@ -456,7 +457,7 @@ class PaymentPodViewModel : ViewModel() {
             }
 
             // Allow payment only if total matches (with small rounding tolerance)
-            val totalMatches = Math.abs(totalCustomAmount - pod.totalAmount) < 0.01
+            val totalMatches = abs(totalCustomAmount - pod.totalAmount) < 0.01
             if (!totalMatches) {
                 Log.d(
                     TAG,
@@ -668,53 +669,53 @@ class PaymentPodViewModel : ViewModel() {
     }
 
     // Function to process payment after successful Stripe payment
-    fun markPaymentComplete(podId: String) {
-        val userId = getCurrentUserId()
-        if (userId.isBlank() || podId.isBlank()) {
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                // Mark the user as paid in the podders collection
-                val podderQuery = firestore.collection("pods")
-                    .document(podId)
-                    .collection("podders")
-                    .whereEqualTo("userId", userId)
-                    .limit(1)
-                    .get()
-                    .await()
-
-                if (!podderQuery.isEmpty) {
-                    val podderDoc = podderQuery.documents.first()
-                    firestore.collection("pods")
-                        .document(podId)
-                        .collection("podders")
-                        .document(podderDoc.id)
-                        .update("hasPaid", true)
-                        .await()
-
-                    // Refresh pod state
-                    val currentState = _podState.value
-                    if (currentState is PodState.Success && currentState.pod.id == podId) {
-                        checkIfPaymentAllowed(
-                            currentState.pod,
-                            currentState.totalPodders,
-                            currentState.remainingPodders
-                        )
-
-                        // Refresh the pod list items
-                        fetchPreviousPods(userId)
-                    }
-
-                    // Reset payment processing state
-                    _paymentProcessingState.value = PaymentProcessingState.Idle
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error marking payment complete", e)
-            }
-        }
-    }
+//    fun markPaymentComplete(podId: String) {
+//        val userId = getCurrentUserId()
+//        if (userId.isBlank() || podId.isBlank()) {
+//            return
+//        }
+//
+//        viewModelScope.launch {
+//            try {
+//                // Mark the user as paid in the podders collection
+//                val podderQuery = firestore.collection("pods")
+//                    .document(podId)
+//                    .collection("podders")
+//                    .whereEqualTo("userId", userId)
+//                    .limit(1)
+//                    .get()
+//                    .await()
+//
+//                if (!podderQuery.isEmpty) {
+//                    val podderDoc = podderQuery.documents.first()
+//                    firestore.collection("pods")
+//                        .document(podId)
+//                        .collection("podders")
+//                        .document(podderDoc.id)
+//                        .update("hasPaid", true)
+//                        .await()
+//
+//                    // Refresh pod state
+//                    val currentState = _podState.value
+//                    if (currentState is PodState.Success && currentState.pod.id == podId) {
+//                        checkIfPaymentAllowed(
+//                            currentState.pod,
+//                            currentState.totalPodders,
+//                            currentState.remainingPodders
+//                        )
+//
+//                        // Refresh the pod list items
+//                        fetchPreviousPods(userId)
+//                    }
+//
+//                    // Reset payment processing state
+//                    _paymentProcessingState.value = PaymentProcessingState.Idle
+//                }
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Error marking payment complete", e)
+//            }
+//        }
+//    }
 
     // Reset payment processing state
     fun resetPaymentProcessingState() {

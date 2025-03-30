@@ -194,7 +194,7 @@ fun PaymentScreen(
                 Log.d(TAG, "Payment completed successfully")
 
                 // Mark payment as complete in Firestore
-                paymentViewModel.markPaymentComplete(selectedPodId)
+//                paymentViewModel.markPaymentComplete(selectedPodId)
 
                 scope.launch {
                     snackBarHostState.showSnackbar(
