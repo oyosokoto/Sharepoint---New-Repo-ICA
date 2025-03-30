@@ -26,6 +26,7 @@ import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment.PaymentScre
 import com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.profile.ProfileScreen
 import com.tees.mad.e4089074.sharepoint.util.BottomTabItem
 import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
+import com.tees.mad.e4089074.sharepoint.viewmodels.PaymentPodViewModel
 import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 
 @Composable
@@ -34,11 +35,17 @@ fun DashboardScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel(),
+    paymentViewModel: PaymentPodViewModel = viewModel()
 ) {
     val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
     LaunchedEffect(userProfile) {
         profileViewModel.getUserProfile()
     }
+    LaunchedEffect(profileViewModel) {
+        paymentViewModel.fetchPreviousPods(userProfile?.userId ?: "")
+    }
+
+
     Scaffold(bottomBar = {
         BottomNavigationBar(navController, bottomTabItems)
     }) { innerPadding ->
@@ -70,7 +77,7 @@ fun DashboardScreen(
                     startDestination = AppRoute.Dashboard.PaymentsTab.AddPayment.route
                 ) {
                     composable(AppRoute.Dashboard.PaymentsTab.AddPayment.route) {
-                        PaymentScreen(modifier, navController)
+                        PaymentScreen(modifier, navController, profileViewModel)
                     }
 
                 }

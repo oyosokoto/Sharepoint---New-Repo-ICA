@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,9 +53,10 @@ fun ProfileSectionItem(
         }
 
         if (showDivider) {
-            Divider(
-                color = Color.White.copy(alpha = 0.2f),
-                modifier = Modifier.padding(horizontal = 16.dp)
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.White.copy(alpha = 0.7f),
+                thickness = 1.dp
             )
         }
     }

@@ -17,6 +17,7 @@ export interface PaymentPod {
   splitAmounts?: number[];
   podCode: string;
   createdAt: Date | string;
+  updatedAt: Date | string;
   createdBy: string;
   active: boolean;
 }

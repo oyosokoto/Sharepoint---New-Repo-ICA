@@ -16,6 +16,8 @@ export default function Pods() {
   const [selectedPod, setSelectedPod] = useState<PaymentPod | null>(null);
   const [showQRModal, setShowQRModal] = useState(false);
   const [updatingPod, setUpdatingPod] = useState('');
+  const [showPodDetails, setShowPodDetails] = useState(false);
+  const [selectedPodForDetails, setSelectedPodForDetails] = useState<PaymentPod | null>(null);
 
   useEffect(() => {
     const fetchPods = async () => {
@@ -23,7 +25,7 @@ export default function Pods() {
 
       try {
         const podsQuery = query(
-          collection(db, 'pods'),
+          collection(db!, 'pods'),
           orderBy('createdAt', 'desc')
         );
 
@@ -50,7 +52,7 @@ export default function Pods() {
     setUpdatingPod(podId);
 
     try {
-      const podRef = doc(db, 'pods', podId);
+      const podRef = doc(db!, 'pods', podId);
       await updateDoc(podRef, {
         active: !currentStatus
       });
@@ -70,6 +72,11 @@ export default function Pods() {
   const showQRCode = (pod: PaymentPod) => {
     setSelectedPod(pod);
     setShowQRModal(true);
+  };
+
+  const handlePodClick = (pod: PaymentPod) => {
+    setSelectedPodForDetails(pod);
+    setShowPodDetails(true);
   };
 
   if (loading) {
@@ -123,7 +130,11 @@ export default function Pods() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {pods.map((pod) => (
-                  <tr key={pod.id} className="hover:bg-purple-0">
+                  <tr
+                    key={pod.id}
+                    className="hover:bg-purple-0 cursor-pointer"
+                    onClick={() => handlePodClick(pod)}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {pod.businessName}
                     </td>
@@ -200,6 +211,57 @@ export default function Pods() {
           >
             Create New Pod
           </Link>
+        </div>
+      )}
+
+      {/* Pod Details Modal */}
+      {showPodDetails && selectedPodForDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-purple-deep">Pod Details</h3>
+              <button
+                onClick={() => setShowPodDetails(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-500">Split Type</p>
+                <p className="font-medium">
+                  {selectedPodForDetails.splitType === 'equal' ? 'Equal Split' :
+                    selectedPodForDetails.splitType === 'random' ? 'Random Split' :
+                      selectedPodForDetails.splitType === 'custom' ? 'Custom Split' : 'Equal Split'}
+                </p>
+              </div>
+
+              {selectedPodForDetails.splitAmounts && selectedPodForDetails.splitAmounts.length > 0 && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-2">Split Amounts</p>
+                  <div className="bg-purple-0 p-3 rounded-lg">
+                    {selectedPodForDetails.splitAmounts.map((amount, index) => (
+                      <div key={index} className="flex justify-between py-1">
+                        <span>Podder {index + 1}</span>
+                        <span className="font-medium">{formatCurrency(amount)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowPodDetails(false)}
+                className="px-4 py-2 bg-purple-deep text-white rounded-md hover:bg-purple-royal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -285,6 +347,7 @@ export default function Pods() {
               >
                 Close
               </button>
+
             </div>
           </div>
         </div>

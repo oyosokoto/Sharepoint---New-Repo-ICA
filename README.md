@@ -97,10 +97,11 @@ SharePoint/
    npm run dev
    ```
 5. **Access the admin portal:**
+   Open deployed instance [https://sharepoint-dc313.web.app/](https://sharepoint-dc313.web.app/) in your browser
    Open [http://localhost:3000](http://localhost:3000) in your browser
    
    **Demo Credentials:**
-   - Email: admin@sharepoint.com
+   - Email: admin@SplitIOU.com
    - Password: Admin123!
 
 ## 📜 License

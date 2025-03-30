@@ -25,7 +25,7 @@ export default function Dashboard() {
       try {
         // Get recent pods
         const podsQuery = query(
-          collection(db, 'pods'),
+          collection(db!, 'pods'),
           orderBy('createdAt', 'desc'),
           limit(5)
         );
@@ -39,7 +39,7 @@ export default function Dashboard() {
         setRecentPods(podsData);
 
         // Calculate stats
-        const allPodsQuery = query(collection(db, 'pods'));
+        const allPodsQuery = query(collection(db!, 'pods'));
         const allPodsSnapshot = await getDocs(allPodsQuery);
         const allPods = allPodsSnapshot.docs.map((doc) => doc.data()) as PaymentPod[];
 

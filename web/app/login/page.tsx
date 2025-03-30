@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@sharepoint.com');
+  const [email, setEmail] = useState('admin@SplitIOU.com');
   const [password, setPassword] = useState('Admin123!');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function Login() {
     if (user) {
       router.push('/dashboard');
     }
-  }, [user])
+  }, [user, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +27,7 @@ export default function Login() {
     try {
       await signIn(email, password);
       router.push('/dashboard');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError('Failed to sign in: ' + (error.message || 'Unknown error'));
     } finally {
@@ -40,7 +41,7 @@ export default function Login() {
       <header className="w-full py-4 px-6">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-            SharePoint
+            SplitIOU
           </Link>
         </div>
       </header>
@@ -90,7 +91,7 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white sm:text-sm"
-                        placeholder="admin@sharepoint.com"
+                        placeholder="admin@SplitIOU.com"
                       />
                     </div>
                   </div>

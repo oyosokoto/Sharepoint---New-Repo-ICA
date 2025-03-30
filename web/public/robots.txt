@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://sharepoint-dc313.web.app/sitemap.xml
