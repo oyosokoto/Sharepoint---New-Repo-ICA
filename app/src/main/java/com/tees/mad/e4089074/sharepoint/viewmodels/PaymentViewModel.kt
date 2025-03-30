@@ -82,6 +82,7 @@ class PaymentPodViewModel : ViewModel() {
     }
 
     // Function to join a pod
+// Function to join a pod
     fun joinPod(podCode: String, userId: String) {
         if (userId.isBlank()) {
             _podState.value = PodState.Error("User not logged in")
@@ -106,6 +107,27 @@ class PaymentPodViewModel : ViewModel() {
                 val podDocument = podQuery.documents.first()
                 val pod = podDocument.toObject(PaymentPod::class.java)
                     ?: throw Exception("Failed to parse pod data")
+
+                // Check if pod is active
+                if (!pod.active) {
+                    _podState.value = PodState.Error("This pod is no longer active")
+                    return@launch
+                }
+
+                // Check if the pod is full by counting existing podders
+                val poddersSnapshot = firestore.collection("pods")
+                    .document(podDocument.id)
+                    .collection("podders")
+                    .get()
+                    .await()
+
+                val currentPodders = poddersSnapshot.size()
+
+                // Check if pod is full
+                if (currentPodders >= pod.podderCount) {
+                    _podState.value = PodState.Error("This pod is already full")
+                    return@launch
+                }
 
                 // Check if user has already joined this pod
                 val existingPodderQuery = firestore.collection("pods")
@@ -137,13 +159,13 @@ class PaymentPodViewModel : ViewModel() {
                     .await()
 
                 // Count total and remaining podders
-                val poddersSnapshot = firestore.collection("pods")
+                val updatedPoddersSnapshot = firestore.collection("pods")
                     .document(podDocument.id)
                     .collection("podders")
                     .get()
                     .await()
 
-                val totalPodders = poddersSnapshot.size()
+                val totalPodders = updatedPoddersSnapshot.size()
                 val remainingPodders = pod.podderCount - totalPodders
 
                 // Update state with pod details
@@ -669,53 +691,82 @@ class PaymentPodViewModel : ViewModel() {
     }
 
     // Function to process payment after successful Stripe payment
-//    fun markPaymentComplete(podId: String) {
-//        val userId = getCurrentUserId()
-//        if (userId.isBlank() || podId.isBlank()) {
-//            return
-//        }
-//
-//        viewModelScope.launch {
-//            try {
-//                // Mark the user as paid in the podders collection
-//                val podderQuery = firestore.collection("pods")
-//                    .document(podId)
-//                    .collection("podders")
-//                    .whereEqualTo("userId", userId)
-//                    .limit(1)
-//                    .get()
-//                    .await()
-//
-//                if (!podderQuery.isEmpty) {
-//                    val podderDoc = podderQuery.documents.first()
+// Function to process payment after successful Stripe payment
+    fun markPaymentComplete(podId: String) {
+        val userId = getCurrentUserId()
+        if (userId.isBlank() || podId.isBlank()) {
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                // Mark the user as paid in the podders collection
+                val podderQuery = firestore.collection("pods")
+                    .document(podId)
+                    .collection("podders")
+                    .whereEqualTo("userId", userId)
+                    .limit(1)
+                    .get()
+                    .await()
+
+                if (!podderQuery.isEmpty) {
+                    val podderDoc = podderQuery.documents.first()
 //                    firestore.collection("pods")
 //                        .document(podId)
 //                        .collection("podders")
 //                        .document(podderDoc.id)
 //                        .update("hasPaid", true)
 //                        .await()
-//
-//                    // Refresh pod state
-//                    val currentState = _podState.value
-//                    if (currentState is PodState.Success && currentState.pod.id == podId) {
-//                        checkIfPaymentAllowed(
-//                            currentState.pod,
-//                            currentState.totalPodders,
-//                            currentState.remainingPodders
-//                        )
-//
-//                        // Refresh the pod list items
-//                        fetchPreviousPods(userId)
-//                    }
-//
-//                    // Reset payment processing state
-//                    _paymentProcessingState.value = PaymentProcessingState.Idle
-//                }
-//            } catch (e: Exception) {
-//                Log.e(TAG, "Error marking payment complete", e)
-//            }
-//        }
-//    }
+                    Log.d(TAG, "Payment marked as complete for pod: ${podderDoc.data}")
+                    // Wait for 2 seconds to allow server-side updates to propagate
+                    kotlinx.coroutines.delay(2000)
+
+                    // Check if pod is still active after payment
+                    val podSnapshot = firestore.collection("pods")
+                        .document(podId)
+                        .get()
+                        .await()
+
+                    val pod = podSnapshot.toObject(PaymentPod::class.java)
+
+                    if (pod != null && !pod.active) {
+                        // If pod is no longer active, clear the active pod list item
+                        _activePodListItem.value = null
+
+                        // Also update the pod state to reflect the change
+                        val currentState = _podState.value
+                        if (currentState is PodState.Success && currentState.pod.id == podId) {
+                            // Create updated pod object with active status set to false
+                            val updatedPod = currentState.pod.copy(active = false)
+                            _podState.value = PodState.Success(
+                                pod = updatedPod,
+                                totalPodders = currentState.totalPodders,
+                                remainingPodders = currentState.remainingPodders
+                            )
+                        }
+                    }
+
+                    // Refresh pod state
+                    val currentState = _podState.value
+                    if (currentState is PodState.Success && currentState.pod.id == podId) {
+                        checkIfPaymentAllowed(
+                            currentState.pod,
+                            currentState.totalPodders,
+                            currentState.remainingPodders
+                        )
+
+                        // Refresh the pod list items
+                        fetchPreviousPods(userId)
+                    }
+
+                    // Reset payment processing state
+                    _paymentProcessingState.value = PaymentProcessingState.Idle
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error marking payment complete", e)
+            }
+        }
+    }
 
     // Reset payment processing state
     fun resetPaymentProcessingState() {

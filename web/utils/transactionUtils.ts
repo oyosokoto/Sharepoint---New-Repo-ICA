@@ -1,5 +1,5 @@
 import { db } from "../lib/firebase-admin";
-import { Transaction, TransactionStatus } from "../types";
+import { PaymentPod, Transaction, TransactionStatus } from "../types";
 import { Timestamp } from "firebase-admin/firestore";
 import logger from "./logger";
 
@@ -211,7 +211,7 @@ export const checkAndEndPaymentPod = async (podId: string): Promise<void> => {
       return;
     }
 
-    const pod = podDoc.data();
+    const pod = podDoc.data() as PaymentPod;
     if (!pod) return;
 
     // Get all completed transactions for this pod
@@ -246,18 +246,18 @@ export const checkAndEndPaymentPod = async (podId: string): Promise<void> => {
     });
 
     logger.info(
-      `Payment pod status check: ${paidPodders}/${totalPodders} podders paid, total amount: ${totalPaid}/${pod.amount}`,
+      `Payment pod status check: ${paidPodders}/${totalPodders} podders paid, total amount: ${totalPaid}/${pod.totalAmount}`,
       {
         podId,
         paidPodders,
         totalPodders,
         totalPaid,
-        podAmount: pod.amount,
+        podAmount: pod.totalAmount,
       }
     );
 
     // If all podders have paid and the total amount matches the pod amount
-    if (paidPodders === totalPodders && totalPaid === pod.amount) {
+    if (paidPodders === totalPodders && totalPaid === pod.totalAmount) {
       // Set the pod's active status to false
       await db.collection(PODS_COLLECTION).doc(podId).update({
         active: false,
@@ -267,7 +267,7 @@ export const checkAndEndPaymentPod = async (podId: string): Promise<void> => {
       logger.success(`Payment pod completed and marked as inactive: ${podId}`, {
         podId,
         totalPaid,
-        podAmount: pod.amount,
+        podAmount: pod.totalAmount,
       });
     }
   } catch (error) {
