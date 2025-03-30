@@ -83,6 +83,91 @@ export async function POST(request: NextRequest) {
 
     // Handle the event based on its type
     switch (event.type) {
+      case "payment_intent.succeeded": {
+        const paymentIntent = event.data.object;
+
+        // Get the session ID from metadata if available
+        const sessionId = paymentIntent.metadata?.checkout_session_id;
+
+        // If we have a session ID, use it to find the transaction
+        if (sessionId) {
+          const transaction = await getTransactionBySessionId(sessionId);
+
+          if (!transaction) {
+            logger.error(`No transaction found for session ID: ${sessionId}`);
+            return NextResponse.json(
+              createErrorResponse(
+                ResponseCode.TRANSACTION_NOT_FOUND,
+                `No transaction found for session ID: ${sessionId}`
+              ),
+              { status: 404 }
+            );
+          }
+
+          // Update the transaction with payment intent ID and status
+          await updateTransactionWithPaymentIntent(
+            transaction.id as string,
+            paymentIntent.id,
+            TransactionStatus.COMPLETED
+          );
+
+          // Update the podder's payment status
+          await updatePodderPaymentStatus(
+            transaction.podId,
+            transaction.userId
+          );
+
+          logger.success(
+            `Payment completed for transaction: ${transaction.id}`,
+            {
+              podId: transaction.podId,
+              userId: transaction.userId,
+              sessionId,
+              paymentIntentId: paymentIntent.id,
+            }
+          );
+        } else {
+          // If no session ID is available in metadata, log this case
+          logger.warning(
+            `Payment intent succeeded but no session ID found in metadata`,
+            {
+              paymentIntentId: paymentIntent.id,
+            }
+          );
+        }
+
+        break;
+      }
+
+      case "payment_intent.payment_failed": {
+        const paymentIntent = event.data.object;
+        const sessionId = paymentIntent.metadata?.checkout_session_id;
+
+        if (sessionId) {
+          const transaction = await getTransactionBySessionId(sessionId);
+
+          if (transaction) {
+            await updateTransactionStatus(
+              transaction.id as string,
+              TransactionStatus.FAILED
+            );
+
+            logger.warning(
+              `Payment failed for transaction: ${transaction.id}`,
+              {
+                podId: transaction.podId,
+                userId: transaction.userId,
+                sessionId,
+                paymentIntentId: paymentIntent.id,
+              }
+            );
+          }
+        }
+
+        break;
+      }
+
+      // Keep the checkout.session.completed handler as a fallback
       case "checkout.session.completed": {
         const session = event.data.object;
 
@@ -116,34 +201,6 @@ export async function POST(request: NextRequest) {
           sessionId: session.id,
           paymentIntentId: session.payment_intent,
         });
-
-        break;
-      }
-
-      case "payment_intent.payment_failed": {
-        const paymentIntent = event.data.object;
-        const sessionId = paymentIntent.metadata?.checkout_session_id;
-
-        if (sessionId) {
-          const transaction = await getTransactionBySessionId(sessionId);
-
-          if (transaction) {
-            await updateTransactionStatus(
-              transaction.id as string,
-              TransactionStatus.FAILED
-            );
-
-            logger.warning(
-              `Payment failed for transaction: ${transaction.id}`,
-              {
-                podId: transaction.podId,
-                userId: transaction.userId,
-                sessionId,
-                paymentIntentId: paymentIntent.id,
-              }
-            );
-          }
-        }
 
         break;
       }
