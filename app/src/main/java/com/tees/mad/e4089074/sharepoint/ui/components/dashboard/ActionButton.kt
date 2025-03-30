@@ -1,4 +1,4 @@
-package com.tees.mad.e4089074.sharepoint.ui.components
+package com.tees.mad.e4089074.sharepoint.ui.components.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -39,9 +38,14 @@ import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
+import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
 
 @Composable
-fun WelcomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun WelcomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
 
     Box(
         modifier = modifier
@@ -116,7 +120,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                     .width(180.dp),
                 shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40,
+                    containerColor = PurpleDeep,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(

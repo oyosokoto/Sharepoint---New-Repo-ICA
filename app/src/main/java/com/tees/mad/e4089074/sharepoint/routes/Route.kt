@@ -1,59 +1,65 @@
 package com.tees.mad.e4089074.sharepoint.routes
 
-sealed class AppRoute(val route: String) {
+sealed class AppRoute(open val route: String) {
     // Auth Stack
     sealed class Auth(route: String) : AppRoute(route) {
         object Welcome : Auth("welcome")
         object Login : Auth("login")
         object Register : Auth("register")
+        object ForgotPassword : Auth("forgot_password")
+
         companion object {
-            const val route = "auth-stack"
+            const val route = "auth"
         }
     }
 
-    // Dashboard Stack
-    sealed class Dashboard(route: String) : AppRoute(route) {
-        object Home : Dashboard("dashboard/home")
-        object Profile : Dashboard("dashboard/profile")
-        object Payments : Dashboard("dashboard/payments")
+    // Dashboard Stack with nested screens
+    sealed class Dashboard : AppRoute("dashboard") {
+        // Main tab screens
+        object HomeTab : Dashboard() {
+            override val route = "dashboard/home"
+
+            // Nested screens within HomeTab
+            object Home : Dashboard() {
+                override val route = "dashboard/home/main"
+            }
+            object Notifications : Dashboard() {
+                override val route = "dashboard/home/notifications"
+            }
+            object TransactionHistory : Dashboard() {
+                override val route = "dashboard/home/transaction_history"
+            }
+        }
+
+        object PaymentsTab : Dashboard() {
+            override val route = "dashboard/payments"
+
+            // Nested screens within PaymentsTab
+            object PaymentDetails : Dashboard() {
+                override val route = "dashboard/payments/details"
+            }
+            object AddPayment : Dashboard() {
+                override val route = "dashboard/payments/add"
+            }
+        }
+
+        object ProfileTab : Dashboard() {
+            override val route = "dashboard/profile"
+
+            // Nested screens within ProfileTab
+            object ProfileInfo : Dashboard() {
+                override val route = "dashboard/profile/info"
+            }
+            object ChangePassword : Dashboard() {
+                override val route = "dashboard/profile/change_password"
+            }
+            object EditProfile : Dashboard() {
+                override val route = "dashboard/profile/edit"
+            }
+        }
 
         companion object {
-            const val route = "dashboard-stack"
+            const val route = "dashboard"
         }
     }
-
-    // Bottom Tabs within Dashboard
-    sealed class DashboardTab(route: String) : AppRoute(route) {
-        object HomeTab : DashboardTab("dashboard-tab/home")
-        object PaymentsTab : DashboardTab("dashboard-tab/payments")
-        object ProfileTab : DashboardTab("dashboard-tab/profile")
-
-        companion object {
-            const val route = "dashboard-tabs"
-        }
-    }
-
-    sealed class HomeNestedScreens(val route: String) {
-        object Home : HomeNestedScreens("home")
-        object Notifications : HomeNestedScreens("notifications")
-        object TransactionHistory : HomeNestedScreens("transaction_history")
-
-        fun createRoute(root: String) = "$root/$route"
-    }
-
-    sealed class PaymentsNestedScreens(val route: String) {
-        object PaymentDetails : PaymentsNestedScreens("payment_details")
-        object AddPayment : PaymentsNestedScreens("add_payment")
-
-        fun createRoute(root: String) = "$root/$route"
-    }
-
-    sealed class ProfileNestedScreens(val route: String) {
-        object ProfileInfo : ProfileNestedScreens("profile_info")
-        object ChangePassword : ProfileNestedScreens("change_password")
-        object EditProfile : ProfileNestedScreens("edit_profile")
-
-        fun createRoute(root: String) = "$root/$route"
-    }
-
 }

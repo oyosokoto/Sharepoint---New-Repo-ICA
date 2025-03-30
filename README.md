@@ -13,36 +13,53 @@ This project is developed as part of my **Mobile App Development** coursework fo
 - 📊 **Transaction Tracking**: Keeps records of who has paid and who hasn't.
 - 🔔 **Notifications**: Reminders for pending payments.
 - 🔗 **Payment Integration**: Secure payment gateway for transactions.
+- 🖥️ **Admin Web Portal**: Business interface for creating and managing payment pods.
 
 ## 🛠️ Tech Stack
+### Mobile App
 - **Package Name**: `com.tees.mad.e4089074.sharepoint`
-- **Language**: Kotlin / Java
-- **Framework**: Android Jetpack Components
-- **Backend**: Firebase Firestore (for data storage) & Firebase Authentication
+- **Language**: Kotlin
+- **Framework**: Android Jetpack Components with Jetpack Compose
+- **Backend**: Firebase Firestore & Firebase Authentication
 - **Payment Handling**: Stripe or PayPal SDK
-- **UI Design**: XML with Material Design principles
+- **UI Design**: Material Design principles with Jetpack Compose
+
+### Admin Web Portal
+- **Framework**: Next.js 15 with React 19
+- **Language**: TypeScript
+- **Backend**: Firebase Firestore & Firebase Authentication
+- **Styling**: Tailwind CSS
+- **QR Code Generation**: For pod sharing
 
 ## 📂 Project Structure
 ```
 SharePoint/
-│── app/
+│── app/                           # Android mobile app
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/tees/mad/e4089074/sharepoint/
 │   │   │   ├── res/
 │   │   │   ├── AndroidManifest.xml
+│── web/                           # Next.js admin portal
+│   ├── app/                       # Next.js app router
+│   ├── components/                # React components
+│   ├── contexts/                  # Context providers
+│   ├── lib/                       # Firebase configuration
+│   ├── types/                     # TypeScript types
+│   ├── utils/                     # Utility functions
 │── .gitignore
-│── build.gradle
+│── build.gradle.kts
 │── README.md
 ```
 
 ## 🚀 Getting Started
 ### Prerequisites
 - Android Studio (Latest Version)
+- Node.js 18.0 or later
 - Firebase Account
 - API Keys for Stripe/PayPal (if implementing payments)
 
-### Setup Instructions
+### Mobile App Setup
 1. **Clone the repository:**
    ```sh
    git clone https://github.com/oyosokoto/Sharepoint---New-Repo-ICA.git
@@ -56,6 +73,37 @@ SharePoint/
     - Connect an emulator or Android device
     - Click ▶️ Run in Android Studio
 
+### Admin Portal Setup
+1. **Navigate to the web directory:**
+   ```sh
+   cd web
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Configure Firebase:**
+   Create a `.env.local` file with your Firebase configuration:
+   ```
+   NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+   ```
+4. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+5. **Access the admin portal:**
+   Open deployed instance [https://sharepoint-dc313.web.app/](https://sharepoint-dc313.web.app/) in your browser
+   Open [http://localhost:3000](http://localhost:3000) in your browser
+   
+   **Demo Credentials:**
+   - Email: admin@SplitIOU.com
+   - Password: Admin123!
+
 ## 📜 License
 This project is developed for academic purposes under Teesside University. It is not intended for commercial use.
 
@@ -68,4 +116,3 @@ Some assets used in this project are not owned by me. If any of your assets are 
 
 ---
 🚀 **Developed by Samuel Andrew as part of the ICA Mobile App Development class at Teesside University.**
-
