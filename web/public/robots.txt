@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sharepoint-dc313.web.app/sitemap.xml
+Sitemap: https://splitiou.vercel.app/sitemap.xml
