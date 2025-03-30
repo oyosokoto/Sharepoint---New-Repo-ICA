@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         const paymentIntent = event.data.object;
 
         // Get the session ID from metadata if available
-        const sessionId = paymentIntent.metadata?.checkout_session_id;
+        const sessionId = paymentIntent.id;
 
         // If we have a session ID, use it to find the transaction
         if (sessionId) {
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object;
-        const sessionId = paymentIntent.metadata?.checkout_session_id;
+        const sessionId = paymentIntent.id;
 
         if (sessionId) {
           const transaction = await getTransactionBySessionId(sessionId);

@@ -92,7 +92,6 @@ fun PaymentScreen(
     val context = LocalContext.current
 
     // Get the current activity for Stripe payment
-    val activity = context as androidx.activity.ComponentActivity
 
     // View model states
     val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
