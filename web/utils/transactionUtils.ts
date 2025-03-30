@@ -155,6 +155,7 @@ export const getTransactionBySessionId = async (
 
 /**
  * Updates the PodderJoin record to mark payment as complete
+ * and checks if all podders have paid the full amount
  */
 export const updatePodderPaymentStatus = async (
   podId: string,
@@ -181,6 +182,9 @@ export const updatePodderPaymentStatus = async (
         userId,
         podderJoinId: podderDoc.id,
       });
+
+      // After updating the podder's payment status, check if all podders have paid
+      await checkAndEndPaymentPod(podId);
     } else {
       logger.warning(`No podder join record found to update payment status`, {
         podId,
@@ -190,5 +194,85 @@ export const updatePodderPaymentStatus = async (
   } catch (error) {
     logger.error("Error updating podder payment status:", error);
     throw error;
+  }
+};
+
+/**
+ * Checks if the total amount paid by all podders equals the pod's total amount
+ * If it does, sets the pod's active status to false
+ */
+export const checkAndEndPaymentPod = async (podId: string): Promise<void> => {
+  try {
+    // Get the pod document
+    const podDoc = await db.collection(PODS_COLLECTION).doc(podId).get();
+
+    if (!podDoc.exists) {
+      logger.warning(`Pod not found when checking total payments: ${podId}`);
+      return;
+    }
+
+    const pod = podDoc.data();
+    if (!pod) return;
+
+    // Get all completed transactions for this pod
+    const transactionsSnapshot = await db
+      .collection(TRANSACTIONS_COLLECTION)
+      .where("podId", "==", podId)
+      .where("status", "==", TransactionStatus.COMPLETED)
+      .get();
+
+    // Calculate the total amount paid
+    let totalPaid = 0;
+    transactionsSnapshot.forEach((doc) => {
+      const transaction = doc.data();
+      totalPaid += transaction.amount;
+    });
+
+    // Get all podders to check if everyone has paid
+    const poddersSnapshot = await db
+      .collection(PODS_COLLECTION)
+      .doc(podId)
+      .collection(PODDER_JOINS_COLLECTION)
+      .get();
+
+    const totalPodders = poddersSnapshot.size;
+    let paidPodders = 0;
+
+    poddersSnapshot.forEach((doc) => {
+      const podder = doc.data();
+      if (podder.hasPaid) {
+        paidPodders++;
+      }
+    });
+
+    logger.info(
+      `Payment pod status check: ${paidPodders}/${totalPodders} podders paid, total amount: ${totalPaid}/${pod.amount}`,
+      {
+        podId,
+        paidPodders,
+        totalPodders,
+        totalPaid,
+        podAmount: pod.amount,
+      }
+    );
+
+    // If all podders have paid and the total amount matches the pod amount
+    if (paidPodders === totalPodders && totalPaid === pod.amount) {
+      // Set the pod's active status to false
+      await db.collection(PODS_COLLECTION).doc(podId).update({
+        active: false,
+        updatedAt: Timestamp.now(),
+      });
+
+      logger.success(`Payment pod completed and marked as inactive: ${podId}`, {
+        podId,
+        totalPaid,
+        podAmount: pod.amount,
+      });
+    }
+  } catch (error) {
+    logger.error(`Error checking and ending payment pod: ${error}`, {
+      podId,
+    });
   }
 };
