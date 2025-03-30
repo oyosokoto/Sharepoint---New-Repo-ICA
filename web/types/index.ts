@@ -28,3 +28,25 @@ export interface PodderJoin {
   joinedAt: Date;
   hasPaid: boolean;
 }
+
+export enum TransactionStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  FAILED = "failed",
+  REFUNDED = "refunded",
+}
+
+// Import Timestamp from firebase-admin for server-side code
+import type { Timestamp as FirebaseTimestamp } from "firebase-admin/firestore";
+
+export interface Transaction {
+  id?: string;
+  userId: string;
+  podId: string;
+  amount: number;
+  status: TransactionStatus;
+  stripeSessionId?: string;
+  stripePaymentIntentId?: string;
+  createdAt: Date | string | FirebaseTimestamp;
+  updatedAt: Date | string | FirebaseTimestamp;
+}

@@ -20,14 +20,49 @@ class ProfileViewModel : ViewModel() {
     private val _userProfile = MutableStateFlow<ProfileInformation?>(null)
     val userProfile: StateFlow<ProfileInformation?> = _userProfile
 
+    private val _userToken = MutableStateFlow<String?>(null)
+    val userToken: StateFlow<String?> = _userToken
+
+    init {
+        getUserProfile()
+        viewModelScope.launch {
+            refreshUserToken()
+        }
+    }
+
     // Fetch user profile from Firestore
     fun getUserProfile() {
         val userId = auth.currentUser?.uid ?: return
+
         viewModelScope.launch {
-            val userDoc = firestore.collection("users").document(userId).get().await()
-            if (userDoc.exists()) {
-                _userProfile.value = userDoc.toObject(ProfileInformation::class.java)
+            try {
+                val userDoc = firestore.collection("users").document(userId).get().await()
+                if (userDoc.exists()) {
+                    _userProfile.value = userDoc.toObject(ProfileInformation::class.java)
+                } else {
+                    // Create a default profile if none exists
+                    createUserProfile(userId)
+                }
+            } catch (e: Exception) {
+                Log.e("ProfileViewModel", "Failed to fetch user profile", e)
             }
+        }
+    }
+
+    // Refresh and expose the user token
+    private suspend fun refreshUserToken() {
+        _userToken.value = getUserToken()
+    }
+
+    suspend fun getUserToken(): String? {
+        val currentUser = auth.currentUser ?: return null
+
+        return try {
+            val tokenResult = currentUser.getIdToken(true).await()
+            tokenResult.token
+        } catch (e: Exception) {
+            Log.e("ProfileViewModel", "Error getting user ID token", e)
+            null
         }
     }
 
@@ -58,7 +93,11 @@ class ProfileViewModel : ViewModel() {
             try {
                 firestore.collection("users").document(userId).update(updatedProfile).await()
                 // Update the local state
-                _userProfile.value = _userProfile.value?.copy(firstName = firstName, lastName = lastName, notificationsEnabled = notificationsEnabled)
+                _userProfile.value = _userProfile.value?.copy(
+                    firstName = firstName,
+                    lastName = lastName,
+                    notificationsEnabled = notificationsEnabled
+                )
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Profile update failed", e)
             }
@@ -78,14 +117,17 @@ class ProfileViewModel : ViewModel() {
                 val imageUrl = storageRef.downloadUrl.await().toString()
 
                 // Update the user profile in Firestore with the image URL
-                firestore.collection("users").document(userId).update("profileImage", imageUrl).await()
+                firestore.collection("users").document(userId).update("profileImage", imageUrl)
+                    .await()
 
                 // Update the local state with the new profile image URL
                 _userProfile.value = _userProfile.value?.copy(profileImage = imageUrl)
+
+                // After successful profile update, refresh the token
+                refreshUserToken()
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Image upload failed", e)
             }
         }
     }
 }
-
