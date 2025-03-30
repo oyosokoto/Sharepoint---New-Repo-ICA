@@ -32,18 +32,36 @@ object StripePaymentLauncher {
         object Canceled : PaymentResult()
     }
     
+    // Store the client secret for later use
+    private var pendingClientSecret: String? = null
+    private var pendingMerchantName: String = "SharePoint"
+    
     /**
-     * Present the payment sheet to the user
-     * @param activity The activity to launch the payment sheet from
+     * Prepare the payment sheet with the client secret
+     * This should be called before the activity is created
+     * 
      * @param clientSecret The client secret from the payment intent
      * @param merchantName The name of the merchant
      */
-    fun presentPaymentSheet(
-        activity: ComponentActivity,
-        clientSecret: String,
-        merchantName: String = "SharePoint"
-    ) {
+    fun preparePayment(clientSecret: String, merchantName: String = "SharePoint") {
+        pendingClientSecret = clientSecret
+        pendingMerchantName = merchantName
         _paymentResult.value = PaymentResult.Loading
+    }
+    
+    /**
+     * Present the payment sheet to the user
+     * This should be called from the activity's onCreate method
+     * 
+     * @param activity The activity to launch the payment sheet from
+     */
+    fun presentPreparedPayment(activity: ComponentActivity) {
+        val clientSecret = pendingClientSecret
+        if (clientSecret == null) {
+            Log.e(TAG, "No pending client secret")
+            _paymentResult.value = PaymentResult.Failed("No pending client secret")
+            return
+        }
         
         try {
             // Configure Stripe with publishable key
@@ -56,7 +74,7 @@ object StripePaymentLauncher {
             
             // Configure payment sheet
             val paymentSheetConfig = PaymentSheet.Configuration(
-                merchantDisplayName = merchantName,
+                merchantDisplayName = pendingMerchantName,
                 customer = null,
                 allowsDelayedPaymentMethods = false
             )
@@ -67,6 +85,9 @@ object StripePaymentLauncher {
                 paymentIntentClientSecret = clientSecret,
                 configuration = paymentSheetConfig
             )
+            
+            // Clear the pending client secret
+            pendingClientSecret = null
         } catch (e: Exception) {
             Log.e(TAG, "Error presenting payment sheet", e)
             _paymentResult.value = PaymentResult.Failed("Error presenting payment sheet: ${e.localizedMessage}")

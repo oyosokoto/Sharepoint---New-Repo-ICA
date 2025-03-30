@@ -1,5 +1,6 @@
 package com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.payment
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -162,11 +162,12 @@ fun PaymentScreen(
                 val state = paymentProcessingState as PaymentPodViewModel.PaymentProcessingState.Success
                 Log.d(TAG, "Payment session created successfully: ${state.clientSecret}")
 
-                // Present Stripe payment sheet with client secret
-                StripePaymentLauncher.presentPaymentSheet(
-                    activity = activity,
-                    clientSecret = state.clientSecret
-                )
+                // Launch the PaymentActivity to handle the payment
+                val intent = Intent(context, PaymentActivity::class.java).apply {
+                    putExtra(PaymentActivity.EXTRA_CLIENT_SECRET, state.clientSecret)
+                    putExtra(PaymentActivity.EXTRA_MERCHANT_NAME, "SharePoint")
+                }
+                context.startActivity(intent)
             }
             is PaymentPodViewModel.PaymentProcessingState.Error -> {
                 showPaymentProcessingDialog = false

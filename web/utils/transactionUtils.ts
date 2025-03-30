@@ -5,7 +5,8 @@ import logger from "./logger";
 
 // Collection references
 const TRANSACTIONS_COLLECTION = "transactions";
-const PODDER_JOINS_COLLECTION = "podderJoins";
+const PODS_COLLECTION = "pods";
+const PODDER_JOINS_COLLECTION = "podders";
 
 /**
  * Creates a new transaction in Firestore
@@ -161,8 +162,9 @@ export const updatePodderPaymentStatus = async (
 ): Promise<void> => {
   try {
     const querySnapshot = await db
+      .collection(PODS_COLLECTION)
+      .doc(podId)
       .collection(PODDER_JOINS_COLLECTION)
-      .where("podId", "==", podId)
       .where("userId", "==", userId)
       .limit(1)
       .get();
