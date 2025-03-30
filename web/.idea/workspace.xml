@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c2a5de5a-cc36-4c4b-8c92-d56e0e504007" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/ActivePodState.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/PodLoadingState.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/util/datamodels/PaymentPods.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/util/enums/SplitType.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/viewmodels/PaymentViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/android-chrome-192x192.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/android-chrome-512x512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/apple-touch-icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/favicon-16x16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/favicon-32x32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/site.webmanifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/EmptyPod.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/EmptyPod.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/JoinPodDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/JoinPodDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/PodCard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/pods/PodCard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/profile/ProfileSectionCard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/profile/ProfileSectionCard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/profile/ProfileSectionItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/components/profile/ProfileSectionItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/DashboardScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/DashboardScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/payment/PaymentScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/payment/PaymentScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/profile/ProfileScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/tees/mad/e4089074/sharepoint/ui/screens/dashboard/profile/ProfileScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/create-pod/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/create-pod/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/pods/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/pods/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/app/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/DashboardNav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/DashboardNav.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contexts/AuthContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/AuthContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/firebase.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/index.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2uw6RFdVxZCbQCuNPoovIA7ttUL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.localhost:3000.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "sprint4",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/samuelandrew/AndroidStudioProjects/Sharepoint/web",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/samuelandrew/AndroidStudioProjects/Sharepoint/web/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/app" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.localhost:3000" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c2a5de5a-cc36-4c4b-8c92-d56e0e504007" name="Changes" comment="" />
+      <created>1743147280402</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743147280402</updated>
+      <workItem from="1743147281808" duration="108000" />
+      <workItem from="1743147395070" duration="14445000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

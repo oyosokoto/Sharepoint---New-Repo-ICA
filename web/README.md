@@ -1,12 +1,13 @@
-# SharePoint - Simplified Group Payment Solution
+# SplitIOU - Simplified Group Payment Solution
 
-SharePoint is a modern web application designed to simplify the process of splitting bills and managing shared expenses. Whether you're a restaurant owner, a group of friends dining out, or roommates sharing household expenses, SharePoint makes it easy to create, manage, and settle shared payments.
+SplitIOU is a modern web application designed to simplify the process of splitting bills and managing shared expenses. Whether you're a restaurant owner, a group of friends dining out, or roommates sharing household expenses, SplitIOU makes it easy to create, manage, and settle shared payments.
 
-![SharePoint Logo](public/sharepoint-logo.png)
+![SplitIOU Logo](public/logo.png)
 
 ## 🌟 Features
 
 ### For Businesses
+
 - **Create Payment Pods**: Generate payment pods with multiple items and quantities
 - **Flexible Payment Splitting**: Choose between equal split, random split, or let customers choose their amounts
 - **QR Code Generation**: Easily share payment pods with customers via QR codes
@@ -14,6 +15,7 @@ SharePoint is a modern web application designed to simplify the process of split
 - **Multi-Item Support**: Add multiple items with different prices and quantities to a single pod
 
 ### For Customers
+
 - **Join Payment Pods**: Easily join a payment pod using a unique code or QR scan
 - **View Itemized Bills**: See exactly what items are included in the shared expense
 - **Fair Split Calculation**: Automatically calculate each person's share of the bill
@@ -28,6 +30,7 @@ SharePoint is a modern web application designed to simplify the process of split
 ## 📋 Getting Started
 
 ### Prerequisites
+
 - Node.js (v14 or later)
 - npm or yarn
 - Firebase account
@@ -35,12 +38,14 @@ SharePoint is a modern web application designed to simplify the process of split
 ### Installation
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/yourusername/sharepoint.git
-   cd sharepoint
+   git clone https://github.com/yourusername/SplitIOU.git
+   cd SplitIOU
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -49,6 +54,7 @@ SharePoint is a modern web application designed to simplify the process of split
 
 3. Set up environment variables:
    Create a `.env.local` file in the root directory with the following variables:
+
    ```
    NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
@@ -59,6 +65,7 @@ SharePoint is a modern web application designed to simplify the process of split
    ```
 
 4. Run the development server:
+
    ```bash
    npm run dev
    # or
@@ -72,7 +79,7 @@ SharePoint is a modern web application designed to simplify the process of split
 ### For Businesses
 
 1. **Sign up/Login**: Create an account or log in to your existing account
-2. **Create a Payment Pod**: 
+2. **Create a Payment Pod**:
    - Enter your business name
    - Add multiple items with their prices and quantities
    - Specify the number of people sharing the bill

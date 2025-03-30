@@ -83,14 +83,14 @@ fun ProfileScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Purple0,
+//                            Purple0,
                             Purple20,
                             Purple40,
                             Purple60,
                             Purple80,
                             PurpleSoft,
-                            PurpleDeep,
-                            PurpleRoyal
+                            PurpleRoyal,
+                            PurpleRoyal,
                         )
                     )
                 )
@@ -142,26 +142,16 @@ fun ProfileScreen(
                 ProfileSectionItem(
                     icon = Icons.AutoMirrored.Outlined.Help,
                     title = "Help",
-                    onClick = { showToast(context, "Help") }
+                    onClick = {
+                        showToast(context, "Help")
+                    }
                 )
 
                 ProfileSectionItem(
                     icon = Icons.Outlined.Inbox,
                     title = "Inbox",
-                    onClick = { showToast(context, "Inbox") },
-                    trailingContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(Color.Red, shape = CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "3",
-                                color = Color.White,
-                                fontSize = 10.sp
-                            )
-                        }
+                    onClick = {
+                        showToast(context, "Inbox")
                     }
                 )
 

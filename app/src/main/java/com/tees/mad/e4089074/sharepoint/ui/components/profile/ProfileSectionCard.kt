@@ -21,7 +21,7 @@ fun ProfileSectionCard(
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.1f)
+            containerColor = Color.White.copy(alpha = 0.3f)
         )
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

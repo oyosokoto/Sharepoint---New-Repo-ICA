@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../lib/firebase';
-import { useAuth } from '../../../contexts/AuthContext';
+import { db } from '@/lib/firebase';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   generatePodCode,
   calculateAmountPerPodder,
@@ -12,9 +12,9 @@ import {
   SplitType,
   calculateRandomSplit,
   initializeCustomSplit
-} from '../../../utils/podUtils';
+} from '@/utils/podUtils';
 import QRCode from 'react-qr-code';
-import { PodItem } from '../../../types';
+import { PodItem } from '@/types';
 
 export default function CreatePod() {
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function CreatePod() {
   });
 
   // Function to update split amounts based on split type
-  const updateSplitAmounts = () => {
+  const updateSplitAmounts = React.useCallback(() => {
     const podderCountNum = parseInt(podderCount) || 1;
     const { totalAmount } = calculatedValues;
 
@@ -76,12 +76,12 @@ export default function CreatePod() {
         setSplitAmounts(initializeCustomSplit(totalAmount, podderCountNum));
         break;
     }
-  };
+  }, [calculatedValues, podderCount, splitType]);
 
   // Update split amounts when total amount or podder count changes
   useEffect(() => {
     updateSplitAmounts();
-  }, [calculatedValues.totalAmount, podderCount, splitType]);
+  }, [updateSplitAmounts]);
 
   // Handle split type change
   const handleSplitTypeChange = (newSplitType: SplitType) => {
@@ -175,7 +175,7 @@ export default function CreatePod() {
         active: true,
       };
 
-      await addDoc(collection(db, 'pods'), podData);
+      await addDoc(collection(db!, 'pods'), podData);
       setSuccess(true);
 
     } catch (error) {

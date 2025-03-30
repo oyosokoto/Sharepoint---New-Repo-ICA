@@ -24,7 +24,7 @@ export default function DashboardNav() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-purple-600 dark:text-purple-400">SharePoint</span>
+              <span className="text-xl font-bold text-purple-600 dark:text-purple-400">SplitIOU</span>
             </div>
             <div className="hidden sm:ml-8 sm:flex sm:space-x-8">
               <Link
