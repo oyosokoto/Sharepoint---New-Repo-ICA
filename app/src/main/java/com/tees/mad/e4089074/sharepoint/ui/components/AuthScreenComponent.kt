@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 
 @Composable
@@ -44,7 +43,7 @@ fun AuthScreenComponent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp),
+                .padding(horizontal = 20.dp, vertical = 36.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Back button
@@ -67,7 +66,7 @@ fun AuthScreenComponent(
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                         contentDescription = "Back",
-                        tint = PurpleSoft
+                        tint = PurpleDeep
                     )
                 }
             }

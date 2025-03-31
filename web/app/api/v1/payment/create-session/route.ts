@@ -97,6 +97,7 @@ export async function POST(request: NextRequest) {
       userId,
       podId,
       amount,
+      pod,
       paymentIntent.id
     );
 

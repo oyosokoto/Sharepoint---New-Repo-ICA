@@ -12,11 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tees.mad.e4089074.sharepoint.util.AppTransactionData
+import com.tees.mad.e4089074.sharepoint.util.TransactionData
 
 @Composable
 fun TransactionList(
-    transactions: List<AppTransactionData>
+    transactions: List<TransactionData>
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(12.dp),

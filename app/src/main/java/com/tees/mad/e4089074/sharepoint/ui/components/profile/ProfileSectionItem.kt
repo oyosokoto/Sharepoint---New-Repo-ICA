@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 
 
 @Composable
@@ -38,14 +39,14 @@ fun ProfileSectionItem(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = Color.White
+                tint = PurpleDeep
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
                 text = title,
-                color = Color.White,
+                color = PurpleDeep,
                 modifier = Modifier.weight(1f)
             )
 

@@ -15,6 +15,7 @@ export const createTransaction = async (
   userId: string,
   podId: string,
   amount: number,
+  pod: PaymentPod,
   stripeSessionId?: string
 ): Promise<string> => {
   try {
@@ -26,6 +27,9 @@ export const createTransaction = async (
       stripeSessionId,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      totalPodAmount: pod.totalAmount,
+      totalPodders: pod.podderCount,
+      businessName: pod.businessName,
     };
 
     const docRef = await db

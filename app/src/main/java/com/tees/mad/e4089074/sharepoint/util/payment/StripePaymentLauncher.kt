@@ -1,6 +1,5 @@
 package com.tees.mad.e4089074.sharepoint.util.payment
 
-import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.stripe.android.PaymentConfiguration

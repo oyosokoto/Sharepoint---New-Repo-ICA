@@ -132,8 +132,7 @@ export default function Pods() {
                 {pods.map((pod) => (
                   <tr
                     key={pod.id}
-                    className="hover:bg-purple-0 cursor-pointer"
-                    onClick={() => handlePodClick(pod)}
+                    className="hover:bg-purple-0"
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {pod.businessName}
@@ -156,7 +155,10 @@ export default function Pods() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatCurrency(pod.totalAmount)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                      onClick={() => handlePodClick(pod)}
+                    >
                       {pod.podderCount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-purple-deep">
@@ -173,7 +175,7 @@ export default function Pods() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => showQRCode(pod)}
-                        className="text-purple-deep hover:text-purple-royal mr-4"
+                        className="text-purple-deep hover:text-purple-royal mr-4 cursor-pointer"
                       >
                         Show QR
                       </button>
@@ -183,7 +185,7 @@ export default function Pods() {
                         className={`${pod.active
                           ? 'text-red-600 hover:text-red-800'
                           : 'text-green-600 hover:text-green-800'
-                          } ${updatingPod === pod.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          } ${updatingPod === pod.id ? 'opacity-50 cursor-not-allowed' : ''} cursor-pointer`}
                       >
                         {updatingPod === pod.id
                           ? 'Updating...'

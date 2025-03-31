@@ -49,4 +49,7 @@ export interface Transaction {
   stripePaymentIntentId?: string;
   createdAt: Date | string | FirebaseTimestamp;
   updatedAt: Date | string | FirebaseTimestamp;
+  totalPodders: number;
+  totalPodAmount: number;
+  businessName: string;
 }

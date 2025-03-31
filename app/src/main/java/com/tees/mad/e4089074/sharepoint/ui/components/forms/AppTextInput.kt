@@ -19,9 +19,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tees.mad.e4089074.sharepoint.ui.theme.ErrorRed
 import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleGrey40
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 
 @Composable
@@ -54,7 +54,7 @@ fun AppTextInput(
                 Icon(
                     imageVector = it,
                     contentDescription = "$label Icon",
-                    tint = if (error) ErrorRed else PurpleSoft
+                    tint = if (error) ErrorRed else PurpleDeep
                 )
             }
         },
@@ -64,7 +64,7 @@ fun AppTextInput(
                     Icon(
                         imageVector = it,
                         contentDescription = "$label Trailing Icon",
-                        tint = if (error) ErrorRed else PurpleSoft
+                        tint = if (error) ErrorRed else PurpleDeep
                     )
                 }
             }

@@ -1,7 +1,6 @@
 package com.tees.mad.e4089074.sharepoint.util.datamodels
 
 import com.google.firebase.Timestamp
-import com.tees.mad.e4089074.sharepoint.util.enums.SplitType
 
 
 data class PodItem(

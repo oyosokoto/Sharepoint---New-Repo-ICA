@@ -156,9 +156,9 @@ export default function CreatePod() {
       const podItems: PodItem[] = items.map(item => ({
         id: item.id,
         name: item.name,
-        price: parseFloat(item.price) || 0,
+        price: parseFloat(parseInt(item.price).toFixed(2)) || 0,
         quantity: parseInt(item.quantity) || 0,
-        subtotal: (parseFloat(item.price) || 0) * (parseInt(item.quantity) || 0)
+        subtotal: (parseFloat(parseInt(item.price).toFixed(2)) || 0) * (parseInt(item.quantity) || 0)
       }));
 
       const podData = {

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,15 +28,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple80
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
+import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.formatNumber
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
@@ -68,22 +70,24 @@ fun BalanceCard(
     }
 
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(24.dp),
+            .height(170.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Purple80
+            containerColor = PurpleSoft
         ),
+        shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
+            defaultElevation = 0.dp
         )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
+                .fillMaxSize()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
+            // Top row with currency and visibility toggle
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,9 +95,11 @@ fun BalanceCard(
             ) {
                 Text(
                     text = "GBP",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = White.copy(alpha = 0.9f)
+                    )
                 )
 
                 IconButton(
@@ -111,29 +117,29 @@ fun BalanceCard(
                     Icon(
                         imageVector = if (isBalanceVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                         contentDescription = if (isBalanceVisible) "Hide Balance" else "Show Balance",
-                        tint = Color.Black.copy(alpha = 0.7f)
+                        tint = Color.White
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
-
+            // Balance info
             Text(
                 text = "Total Transaction Summary",
-                fontSize = 12.sp,
-                color = Color.Black.copy(alpha = 0.7f)
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = White.copy(alpha = 0.8f)
+                )
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = if (isBalanceVisible) "£${formatNumber(amountSaved)}" else "********",
-                fontSize = 42.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.Black
+                style = TextStyle(
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = White
+                )
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = "Total Amount Spent : " + if (isBalanceVisible) "£${
@@ -141,8 +147,11 @@ fun BalanceCard(
                         totalAmountSpent
                     )
                 }" else "********",
-                fontSize = 12.sp,
-                color = Color.Black
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = White.copy(alpha = 0.8f)
+                )
             )
         }
     }

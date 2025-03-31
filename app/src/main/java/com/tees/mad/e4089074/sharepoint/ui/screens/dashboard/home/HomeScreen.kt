@@ -1,12 +1,14 @@
 package com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,13 +17,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,8 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,75 +44,56 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tees.mad.e4089074.sharepoint.R
 import com.tees.mad.e4089074.sharepoint.routes.AppRoute
-import com.tees.mad.e4089074.sharepoint.ui.components.TransactionList
 import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.BalanceCard
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.EmptyTransaction
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.JoinPod
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.TransactionListItem
+import com.tees.mad.e4089074.sharepoint.ui.theme.Black
+import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
+import com.tees.mad.e4089074.sharepoint.ui.theme.Purple0
+import com.tees.mad.e4089074.sharepoint.ui.theme.Purple20
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
-import com.tees.mad.e4089074.sharepoint.util.AppTransactionData
 import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
+import com.tees.mad.e4089074.sharepoint.viewmodels.TransactionViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     profileViewModel: ProfileViewModel = viewModel(),
+    transactionViewModel: TransactionViewModel = viewModel()
 ) {
     val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
-
-
-    // Sample data for transactions
-    val transactions = remember {
-        listOf<AppTransactionData>(
-//            AppTransactionData(
-//                businessName = "Crystals Coffe Shop",
-//                amount = 14.99f,
-//                podderCount = 4,
-//                date = "Mar 15, 2025",
-//                logo = R.drawable.placeholder_logo
-//            ),
-//            AppTransactionData(
-//                businessName = "D & D Restaurant",
-//                amount = 16.99f,
-//                podderCount = 6,
-//                date = "Mar 10, 2025",
-//                logo = R.drawable.placeholder_logo
-//            ),
-//            AppTransactionData(
-//                businessName = "Hot Wings",
-//                amount = 1800.00f,
-//                podderCount = 3,
-//                date = "Mar 01, 2025",
-//                logo = R.drawable.placeholder_logo
-//            )
-        )
+    val allTransactions by transactionViewModel.transactions.collectAsStateWithLifecycle()
+    val transactions = remember(allTransactions) {
+        allTransactions.take(3)
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(White)
+            .padding(horizontal = 20.dp)
+            .padding(top = 36.dp)
     ) {
-        // Main content
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .padding(top = 40.dp)
+        // Top Bar with Profile and Notifications
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Top greeting section with avatar
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            // Profile section
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(id = R.drawable.placeholder_avatar),
                     contentDescription = "Profile Avatar",
                     modifier = Modifier
-                        .size(52.dp)
+                        .size(44.dp)
                         .clip(CircleShape)
-                        .border(2.dp, White, CircleShape)
+                        .border(1.dp, Purple20, CircleShape)
                         .clickable {
                             navController.navigate(AppRoute.Dashboard.ProfileTab.ProfileInfo.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -123,150 +103,112 @@ fun HomeScreen(
                         }
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-                Column {
-                    Text(
-                        text = "Hi, ${userProfile?.firstName ?: ""}",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                Text(
+                    text = "Hi, ${userProfile?.firstName ?: ""}",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Black
                     )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Notification and account buttons
-                Row {
-                    IconButton(
-                        onClick = {
-                            navController
-                                .navigate(
-                                    AppRoute
-                                        .Dashboard.HomeTab.Notifications.route
-                                )
-                        },
-                        modifier = Modifier
-                            .size(44.dp)
-                            .background(White, CircleShape)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Notifications,
-                            contentDescription = "Notifications",
-                            tint = PurpleDeep
-                        )
-                    }
-                }
+                )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Balance Card -
-            BalanceCard()
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Join Pod Card
-            Card(
+            // Notification icon
+            IconButton(
+                onClick = {
+                    navController.navigate(AppRoute.Dashboard.HomeTab.Notifications.route)
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(90.dp)
-                    .clickable {
-                        navController.navigate(AppRoute.Dashboard.PaymentsTab.AddPayment.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                colors = CardDefaults.cardColors(
-                    containerColor = PurpleDeep
-                ),
-                shape = RoundedCornerShape(20.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Purple0)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text(
-                            text = "Join a Pod",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = White
-                        )
-                        Text(
-                            text = "Split payments with friends",
-                            fontSize = 14.sp,
-                            color = White.copy(alpha = 0.7f)
-                        )
-                    }
+                Icon(
+                    imageVector = Icons.Rounded.Notifications,
+                    contentDescription = "Notifications",
+                    tint = PurpleDeep,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
 
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Join Pod",
-                        tint = White,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .background(
-                                color = White.copy(alpha = 0.2f),
-                                shape = CircleShape
-                            )
-                            .padding(8.dp)
-                    )
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // Balance Card - Flattened design
+        BalanceCard(amountSaved = 0f, totalAmountSpent = 0f)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+
+        JoinPod(onClick = {
+            navController.navigate(AppRoute.Dashboard.PaymentsTab.AddPayment.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    inclusive = true
                 }
             }
+        })
+        // Join Pod Card - Flattened design
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
-            // Latest Transactions
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Latest Transactions",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color.Black
+        // Latest Transactions Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Latest Transactions",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Black
                 )
+            )
 
-                TextButton(onClick = {
+            TextButton(
+                onClick = {
                     navController.navigate(AppRoute.Dashboard.HomeTab.TransactionHistory.route)
-                }) {
-                    Text(
-                        text = "See All",
-                        fontSize = 14.sp,
-                        color = Purple40,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            transactions.isNotEmpty().takeIf { it }?.let {
+                },
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+            ) {
                 Text(
-                    text = "Every Red is an amount saved!",
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 12.sp,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 24.dp)
+                    text = "See All",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = PurpleDeep
+                    )
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Empty state for transactions
+        if (transactions.isEmpty()) {
+            EmptyTransaction()
+        } else {
+            Text(
+                text = "Every Red is an amount saved!",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Gray
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 16.dp)
+            )
 
             // Transaction items
-            TransactionList(transactions.subList(0, 0))
-
-
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(transactions.size) { index ->
+                    TransactionListItem(transaction = transactions[index])
+                }
+            }
         }
     }
 }
-

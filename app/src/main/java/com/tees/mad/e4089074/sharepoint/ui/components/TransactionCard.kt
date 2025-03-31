@@ -24,11 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tees.mad.e4089074.sharepoint.R
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
-import com.tees.mad.e4089074.sharepoint.util.AppTransactionData
+import com.tees.mad.e4089074.sharepoint.util.TransactionData
 
 @Composable
-fun TransactionCard(transaction: AppTransactionData) {
+fun TransactionCard(transaction: TransactionData) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -52,7 +53,7 @@ fun TransactionCard(transaction: AppTransactionData) {
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = transaction.logo),
+                    painter = painterResource(id = R.drawable.placeholder_logo),
                     contentDescription = "${transaction.businessName} logo",
                     modifier = Modifier.size(24.dp)
                 )
@@ -72,7 +73,7 @@ fun TransactionCard(transaction: AppTransactionData) {
                 )
 
                 Text(
-                    text = transaction.date,
+                    text = transaction.createdAt,
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
@@ -88,4 +89,3 @@ fun TransactionCard(transaction: AppTransactionData) {
         }
     }
 }
-
