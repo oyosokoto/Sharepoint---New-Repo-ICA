@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.tees.mad.e4089074.sharepoint.ui.components.AuthScreenComponent
 
 @Composable
 fun NotificationScreen(
@@ -12,5 +13,12 @@ fun NotificationScreen(
     navController: NavHostController = rememberNavController()
 ) {
 
-    Text("Notification Screen")
+    AuthScreenComponent(
+        modifier = modifier,
+        onBackArrowClick = { navController.popBackStack() },
+        title = "Notifications",
+        subtitle = "View your notifications"
+    ) {
+        Text(text = "Nothing to see here.")
+    }
 }

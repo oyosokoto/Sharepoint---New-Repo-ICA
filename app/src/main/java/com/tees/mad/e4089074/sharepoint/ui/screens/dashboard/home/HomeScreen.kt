@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -70,6 +71,16 @@ fun HomeScreen(
     val allTransactions by transactionViewModel.transactions.collectAsStateWithLifecycle()
     val transactions = remember(allTransactions) {
         allTransactions.take(3)
+    }
+    
+    // Get transaction stats
+    val totalAmountSpent by transactionViewModel.totalAmountSpent.collectAsStateWithLifecycle()
+    val amountSaved by transactionViewModel.amountSaved.collectAsStateWithLifecycle()
+    
+    // Fetch transactions when the screen comes into focus
+    DisposableEffect(Unit) {
+        transactionViewModel.fetchTransactions()
+        onDispose { }
     }
 
     Column(
@@ -136,8 +147,8 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Balance Card - Flattened design
-        BalanceCard(amountSaved = 0f, totalAmountSpent = 0f)
+        // Balance Card with transaction stats
+        BalanceCard(amountSaved = amountSaved, totalAmountSpent = totalAmountSpent)
 
         Spacer(modifier = Modifier.height(24.dp))
 

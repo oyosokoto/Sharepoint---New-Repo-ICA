@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tees.mad.e4089074.sharepoint.ui.components.dashboard.TransactionListItem
 import com.tees.mad.e4089074.sharepoint.util.TransactionData
 
 @Composable
@@ -39,7 +40,7 @@ fun TransactionList(
             }
         } else {
             items(transactions) { transaction ->
-                TransactionCard(transaction)
+                TransactionListItem(transaction)
             }
         }
     }

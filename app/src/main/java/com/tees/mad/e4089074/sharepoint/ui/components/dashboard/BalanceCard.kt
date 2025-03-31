@@ -124,7 +124,7 @@ fun BalanceCard(
 
             // Balance info
             Text(
-                text = "Total Transaction Summary",
+                text = "Total Transaction Saved",
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,

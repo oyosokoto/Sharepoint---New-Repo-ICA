@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.tees.mad.e4089074.sharepoint.util.TransactionData
+import com.tees.mad.e4089074.sharepoint.util.formatDateOrDefault
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +26,12 @@ class TransactionViewModel : ViewModel() {
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
+
+    private val _totalAmountSpent = MutableStateFlow(0f)
+    val totalAmountSpent: StateFlow<Float> = _totalAmountSpent
+
+    private val _amountSaved = MutableStateFlow(0f)
+    val amountSaved: StateFlow<Float> = _amountSaved
 
     init {
         fetchTransactions()
@@ -57,12 +64,11 @@ class TransactionViewModel : ViewModel() {
                             status = data["status"] as? String ?: "",
                             stripeSessionId = data["stripeSessionId"] as? String,
                             stripePaymentIntentId = data["stripePaymentIntentId"] as? String,
-                            createdAt = createdAt?.toDate()
-                                .toString(),
-                            updatedAt = updatedAt?.toDate().toString(),
+                            createdAt = formatDateOrDefault(createdAt?.toDate()),
+                            updatedAt = formatDateOrDefault(updatedAt?.toDate()),
                             totalPodders = (data["totalPodders"] as? Number)?.toInt() ?: 0,
                             totalPodAmount = (data["totalPodAmount"] as? Number)?.toFloat() ?: 0f,
-                            businessName = data["businessName"] as? String ?: ""
+                            businessName = data["businessName"] as? String ?: "SplitIOU Merchant"
                         )
                     } catch (e: Exception) {
                         Log.e(
@@ -75,6 +81,9 @@ class TransactionViewModel : ViewModel() {
                 }
 
                 _transactions.value = transactionsList
+
+                // Calculate total amount spent and amount saved
+                calculateTransactionStats(transactionsList)
             } catch (e: Exception) {
                 Log.e("TransactionViewModel", "Failed to fetch transactions", e)
                 _error.value = "Failed to load transactions: ${e.message}"
@@ -86,5 +95,31 @@ class TransactionViewModel : ViewModel() {
 
     fun getRecentTransactions(count: Int): List<TransactionData> {
         return transactions.value.take(count)
+    }
+
+    private fun calculateTransactionStats(transactions: List<TransactionData>) {
+        var totalSpent = 0f
+        var totalSaved = 0f
+
+        transactions.forEach { transaction ->
+            if (transaction.status == "completed") {
+                totalSpent += transaction.amount
+
+                // Calculate amount saved (difference between total pod amount and user's amount)
+                val podAmount = transaction.totalPodAmount
+                val userAmount = transaction.amount
+
+                if (podAmount > 0 && transaction.totalPodders > 0) {
+                    // Calculate what the user would have paid without pod sharing
+                    val fullAmount = transaction.totalPodAmount
+                    // Calculate savings (what they would have paid minus what they actually paid)
+                    val saved = fullAmount - userAmount
+                    totalSaved += saved
+                }
+            }
+        }
+
+        _totalAmountSpent.value = totalSpent
+        _amountSaved.value = totalSaved
     }
 }
