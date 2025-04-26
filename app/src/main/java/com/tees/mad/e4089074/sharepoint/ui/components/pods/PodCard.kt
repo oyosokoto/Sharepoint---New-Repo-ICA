@@ -96,9 +96,6 @@ fun PodCard(
 ) {
     val TAG = "PodCard"
     
-    // Log card creation
-    Log.d(TAG, "Creating PodCard for pod: ${pod.id}, business: ${pod.businessName}, " +
-          "active: ${pod.isActive}, expanded: $isExpanded, paymentEnabled: $paymentEnabled")
     // Animate progress value
     val animatedProgress = animateFloatAsState(
         targetValue = pod.progress,

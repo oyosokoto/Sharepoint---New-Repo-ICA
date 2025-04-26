@@ -99,8 +99,9 @@ class PaymentPodViewModel : ViewModel() {
                     .await()
 
                 if (podQuery.isEmpty) {
-                    _podState.value = PodState.Error("Pod not found")
-                    return@launch
+//                    _podState.value = PodState.Error("Pod not found")
+                    throw Exception("Pod not found")
+//                    return@launch
                 }
 
                 // Get the first (and only) pod document
