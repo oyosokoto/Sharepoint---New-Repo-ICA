@@ -136,7 +136,7 @@ export default function CreatePod() {
     const amountPerPodder = calculateAmountPerPodder(totalAmount, podderCountNum);
 
     setCalculatedValues({
-      totalAmount: totalAmount.toFixed(2),
+      totalAmount: parseFloat(totalAmount.toFixed(2)),
       amountPerPodder,
     });
   };
