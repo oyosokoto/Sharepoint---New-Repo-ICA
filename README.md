@@ -20,6 +20,7 @@ This project is developed as part of my **Mobile App Development** coursework fo
 
 ## ⚠️ Implementation Notes
 
+- **Name Change**: This project was initially developed as Sharepoint, but was changed to SplitIOU, after i discovered that it was clashing with the product from microsoft.
 - **Partial Implementation**: Not all screens have been fully implemented in this version.
 - **Placeholder Screens**: Some screens display alerts instead of full functionality.
 - **QR Code Scanner**: The QR code scanner feature has been excluded as it falls beyond the scope of this project.
