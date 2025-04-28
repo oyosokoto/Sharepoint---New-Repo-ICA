@@ -18,6 +18,13 @@ This project is developed as part of my **Mobile App Development** coursework fo
 - 🔗 **Payment Integration**: Secure payment gateway for transactions.
 - 🖥️ **Admin Web Portal**: Business interface for creating and managing payment pods.
 
+## ⚠️ Implementation Notes
+
+- **Partial Implementation**: Not all screens have been fully implemented in this version.
+- **Placeholder Screens**: Some screens display alerts instead of full functionality.
+- **QR Code Scanner**: The QR code scanner feature has been excluded as it falls beyond the scope of this project.
+
+
 ## 🛠️ Tech Stack
 
 ### Mobile App
