@@ -1,31 +1,27 @@
 package com.tees.mad.e4089074.sharepoint.ui.screens.dashboard.profile
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
@@ -34,46 +30,32 @@ import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.ShoppingBag
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.tees.mad.e4089074.sharepoint.R
-import com.tees.mad.e4089074.sharepoint.ui.components.profile.ProfileSectionCard
+import com.tees.mad.e4089074.sharepoint.ui.components.profile.AccountStatItem
+import com.tees.mad.e4089074.sharepoint.ui.components.profile.FlatProfileSectionCard
 import com.tees.mad.e4089074.sharepoint.ui.components.profile.ProfileSectionItem
+import com.tees.mad.e4089074.sharepoint.ui.components.profile.VerticalDivider
 import com.tees.mad.e4089074.sharepoint.ui.theme.Black
 import com.tees.mad.e4089074.sharepoint.ui.theme.ErrorRed
 import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple0
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple20
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple40
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple60
-import com.tees.mad.e4089074.sharepoint.ui.theme.Purple80
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleGrey40
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleRoyal
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleSoft
 import com.tees.mad.e4089074.sharepoint.ui.theme.White
 import com.tees.mad.e4089074.sharepoint.util.showToast
 import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
@@ -94,6 +76,7 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(White)
             .padding(horizontal = 20.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -299,134 +282,5 @@ fun ProfileScreen(
     }
 }
 
-@Composable
-fun AccountStatItem(
-    count: String,
-    label: String,
-    icon: ImageVector
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = PurpleDeep,
-            modifier = Modifier.size(24.dp)
-        )
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        Text(
-            text = count,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Black
-            )
-        )
-
-        Text(
-            text = label,
-            style = TextStyle(
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = Gray
-            )
-        )
-    }
-}
-
-@Composable
-fun FlatProfileSectionCard(
-    content: @Composable () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = White
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 0.dp
-        ),
-        border = BorderStroke(1.dp, Purple0)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            content()
-        }
-    }
-}
-
-@Composable
-fun ProfileSectionItem(
-    icon: ImageVector,
-    title: String,
-    onClick: () -> Unit,
-    showDivider: Boolean = true,
-    iconTint: Color = PurpleGrey40,
-    titleColor: Color = Black
-) {
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = iconTint,
-                modifier = Modifier.size(22.dp)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = titleColor
-                ),
-                modifier = Modifier.weight(1f)
-            )
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = Gray,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-
-        if (showDivider) {
-            Divider(
-                color = Purple0,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun VerticalDivider(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-    thickness: Dp = 1.dp
-) {
-    Box(
-        modifier
-            .width(thickness)
-            .fillMaxHeight()
-            .background(color = color)
-    )
-}
 
 

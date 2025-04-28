@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,8 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
+import androidx.compose.ui.unit.sp
+import com.tees.mad.e4089074.sharepoint.ui.theme.Black
+import com.tees.mad.e4089074.sharepoint.ui.theme.Gray
+import com.tees.mad.e4089074.sharepoint.ui.theme.Purple0
+import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleGrey40
 
 
 @Composable
@@ -26,39 +34,52 @@ fun ProfileSectionItem(
     title: String,
     onClick: () -> Unit,
     showDivider: Boolean = true,
-    trailingContent: @Composable (() -> Unit)? = null
+    iconTint: Color = PurpleGrey40,
+    titleColor: Color = Black
 ) {
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(16.dp),
+                .clickable { onClick() }
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = PurpleDeep
+                tint = iconTint,
+                modifier = Modifier.size(22.dp)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
                 text = title,
-                color = PurpleDeep,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = titleColor
+                ),
                 modifier = Modifier.weight(1f)
             )
 
-            trailingContent?.invoke()
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = Gray,
+                modifier = Modifier.size(20.dp)
+            )
         }
 
         if (showDivider) {
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = Color.White.copy(alpha = 0.7f),
-                thickness = 1.dp
+            Divider(
+                color = Purple0,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }
 }
+
+

@@ -59,7 +59,6 @@ fun WelcomeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // App logo/illustration with subtle animation
             Image(
                 painter = painterResource(id = R.drawable.welcome_illustration),
                 contentDescription = "Welcome Illustration",
@@ -76,7 +75,6 @@ fun WelcomeScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Welcome text with modern typography
             Text(
                 text = "Welcome to",
                 fontSize = 20.sp,
@@ -86,7 +84,7 @@ fun WelcomeScreen(
             )
 
             Text(
-                text = "SharePoint",
+                text = "SplitIOU",
                 fontSize = 36.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = PurpleDeep,
