@@ -31,7 +31,6 @@ fun BottomNavigationBar(
     navController: NavHostController = rememberNavController(),
     items: List<BottomTabItem>
 ) {
-    // Apply elevation with a Surface
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shadowElevation = 10.dp,
@@ -47,7 +46,6 @@ fun BottomNavigationBar(
             val currentBackStackEntry = navController.currentBackStackEntryAsState().value
             val currentRoute = currentBackStackEntry?.destination?.route
 
-            // Check if the current route belongs to one of our tab graphs using the updated route structure
             val currentTab = when {
                 currentRoute?.startsWith("dashboard/home") == true ->
                     AppRoute.Dashboard.HomeTab.route
@@ -67,7 +65,6 @@ fun BottomNavigationBar(
                 NavigationBarItem(
                     icon = {
                         if (isSelected) {
-                            // For selected item, show icon in purple
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(16.dp))
@@ -81,7 +78,6 @@ fun BottomNavigationBar(
                                 )
                             }
                         } else {
-                            // For unselected item, show normal icon in gray
                             Icon(
                                 imageVector = item.icon,
                                 contentDescription = item.title,
@@ -112,7 +108,7 @@ fun BottomNavigationBar(
                         unselectedIconColor = Gray,
                         selectedTextColor = PurpleDeep,
                         unselectedTextColor = Gray,
-                        indicatorColor = White // Make the indicator color transparent (we're using our custom background)
+                        indicatorColor = White
                     )
                 )
             }

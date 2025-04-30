@@ -16,7 +16,6 @@ import com.tees.mad.e4089074.sharepoint.ui.components.AuthScreenComponent
 import com.tees.mad.e4089074.sharepoint.ui.components.TransactionList
 import com.tees.mad.e4089074.sharepoint.viewmodels.TransactionViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionHistoryScreen(
     modifier: Modifier = Modifier,
@@ -25,7 +24,6 @@ fun TransactionHistoryScreen(
 ) {
     val transactions by transactionViewModel.transactions.collectAsStateWithLifecycle()
 
-    // Fetch transactions when the screen comes into focus
     DisposableEffect(Unit) {
         transactionViewModel.fetchTransactions()
         onDispose { }

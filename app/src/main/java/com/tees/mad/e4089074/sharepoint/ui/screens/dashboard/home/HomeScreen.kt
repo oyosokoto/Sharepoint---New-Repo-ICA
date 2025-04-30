@@ -59,7 +59,6 @@ import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 import com.tees.mad.e4089074.sharepoint.viewmodels.TransactionViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -90,13 +89,11 @@ fun HomeScreen(
             .padding(horizontal = 20.dp)
             .padding(top = 36.dp)
     ) {
-        // Top Bar with Profile and Notifications
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Profile section
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(id = R.drawable.placeholder_avatar),
@@ -126,7 +123,6 @@ fun HomeScreen(
                 )
             }
 
-            // Notification icon
             IconButton(
                 onClick = {
                     navController.navigate(AppRoute.Dashboard.HomeTab.Notifications.route)
@@ -147,7 +143,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Balance Card with transaction stats
         BalanceCard(amountSaved = amountSaved, totalAmountSpent = totalAmountSpent)
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -160,11 +155,9 @@ fun HomeScreen(
                 }
             }
         })
-        // Join Pod Card - Flattened design
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Latest Transactions Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -198,7 +191,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Empty state for transactions
         if (transactions.isEmpty()) {
             EmptyTransaction()
         } else {
@@ -214,7 +206,6 @@ fun HomeScreen(
                     .padding(bottom = 16.dp)
             )
 
-            // Transaction items
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions.size) { index ->
                     TransactionListItem(transaction = transactions[index])

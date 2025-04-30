@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,16 +41,6 @@ import com.tees.mad.e4089074.sharepoint.ui.theme.Purple20
 import com.tees.mad.e4089074.sharepoint.ui.theme.Purple0
 import kotlinx.coroutines.delay
 
-/**
- * JoinPodDialog displays a dialog for users to enter a pod code to join an existing pod.
- * 
- * @param podCode The current pod code entered by the user
- * @param isError Whether there's an error with the current pod code
- * @param onPodCodeChange Callback when the pod code is changed
- * @param onDismiss Callback when the dialog is dismissed
- * @param onScanQrCode Callback when the QR code scan button is clicked
- * @param onJoin Callback when the Join button is clicked
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JoinPodDialog(
@@ -70,7 +61,7 @@ fun JoinPodDialog(
         focusRequester.requestFocus()
     }
 
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = onDismiss
     ) {
         Surface(
@@ -91,12 +82,11 @@ fun JoinPodDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Pod code input field with QR code scanner option
                 OutlinedTextField(
                     value = podCode,
-                    onValueChange = { 
+                    onValueChange = {
                         Log.d(TAG, "Pod code changed: $it")
-                        onPodCodeChange(it) 
+                        onPodCodeChange(it)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -108,9 +98,9 @@ fun JoinPodDialog(
                         { Text("Please enter a valid pod code") }
                     } else null,
                     trailingIcon = {
-                        IconButton(onClick = { 
+                        IconButton(onClick = {
                             Log.d(TAG, "QR code scan button clicked")
-                            onScanQrCode() 
+                            onScanQrCode()
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.QrCodeScanner,
@@ -124,9 +114,9 @@ fun JoinPodDialog(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = { 
+                        onDone = {
                             Log.d(TAG, "Keyboard Done action - joining pod")
-                            onJoin() 
+                            onJoin()
                         }
                     ),
                     singleLine = true,
@@ -141,9 +131,9 @@ fun JoinPodDialog(
                 ) {
                     // Cancel button
                     TextButton(
-                        onClick = { 
+                        onClick = {
                             Log.d(TAG, "Cancel button clicked")
-                            onDismiss() 
+                            onDismiss()
                         }
                     ) {
                         Text("Cancel")
@@ -153,9 +143,9 @@ fun JoinPodDialog(
 
                     // Join button - only enabled if pod code is valid
                     Button(
-                        onClick = { 
+                        onClick = {
                             Log.d(TAG, "Join button clicked with code: $podCode")
-                            onJoin() 
+                            onJoin()
                         },
                         enabled = podCode.isNotBlank() && podCode.length >= 4,
                         colors = ButtonDefaults.buttonColors(

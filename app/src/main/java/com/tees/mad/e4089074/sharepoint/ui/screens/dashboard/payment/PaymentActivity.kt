@@ -17,10 +17,7 @@ import com.tees.mad.e4089074.sharepoint.util.payment.StripePaymentLauncher
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-/**
- * Activity dedicated to handling Stripe payments.
- * This is used to ensure proper lifecycle handling for the Stripe PaymentSheet.
- */
+
 class PaymentActivity : ComponentActivity() {
     
     companion object {
@@ -32,21 +29,17 @@ class PaymentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Get the client secret from the intent
         val clientSecret = intent.getStringExtra(EXTRA_CLIENT_SECRET)
         val merchantName = intent.getStringExtra(EXTRA_MERCHANT_NAME) ?: "SharePoint"
         
-        // Present the payment sheet
         if (clientSecret != null) {
             StripePaymentLauncher.preparePayment(clientSecret, merchantName)
             StripePaymentLauncher.presentPreparedPayment(this)
         } else {
-            // If no client secret, finish the activity
             finish()
             return
         }
         
-        // Set the content to a loading indicator
         setContent {
             SharepointTheme {
                 Surface(
@@ -63,7 +56,6 @@ class PaymentActivity : ComponentActivity() {
             }
         }
         
-        // Observe payment result and finish activity when payment is complete
         lifecycleScope.launch {
             StripePaymentLauncher.paymentResult.collectLatest { result ->
                 Log.d(TAG, "Payment result: $result")
@@ -75,7 +67,6 @@ class PaymentActivity : ComponentActivity() {
                         finish()
                     }
                     else -> {
-                        // Do nothing for Loading or Idle states
                     }
                 }
             }

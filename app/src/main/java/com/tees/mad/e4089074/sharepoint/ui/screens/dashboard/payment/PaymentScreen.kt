@@ -40,19 +40,7 @@ import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
 
 
-/**
- * PaymentScreen is the main screen for handling payment pods.
- * It allows users to:
- * 1. View their active pod (if any)
- * 2. View their previous pods
- * 3. Join a new pod using a pod code
- * 4. Make payments for pods they've joined
- *
- * The payment flow varies based on the pod's split type:
- * - For EQUAL and RANDOM splits: Users can pay directly
- * - For CUSTOM splits: Users must enter their share amount, and all members must join
- *   with amounts that sum to the total pod amount before payment is allowed
- */
+
 @Composable
 fun PaymentScreen(
     modifier: Modifier = Modifier,

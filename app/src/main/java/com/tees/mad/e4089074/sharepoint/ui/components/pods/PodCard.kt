@@ -41,6 +41,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -73,17 +74,7 @@ import com.tees.mad.e4089074.sharepoint.util.datamodels.PaymentPod
 import com.tees.mad.e4089074.sharepoint.util.datamodels.PodListItem
 import com.tees.mad.e4089074.sharepoint.util.enums.SplitType
 
-/**
- * PodCard displays a single payment pod with details about the business, amount, and payment status.
- * It can be expanded to show more details and payment options.
- * 
- * @param pod The pod data to display
- * @param isExpanded Whether the card is currently expanded to show details
- * @param onExpand Callback when the user clicks to expand/collapse the card
- * @param onPayNow Callback when the user clicks the Pay Now button
- * @param modifier Modifier for styling
- * @param paymentEnabled Whether the payment button should be enabled
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PodCard(
@@ -419,10 +410,10 @@ fun PodCard(
                     Column {
                         // Payment details section
                         Spacer(modifier = Modifier.height(20.dp))
-                        
-                        Divider(
-                            color = Purple20, // Light purple divider
-                            thickness = 0.5.dp // Apple uses very thin dividers
+
+                        HorizontalDivider(
+                            thickness = 0.5.dp,
+                            color = Purple20
                         )
                         
                         Spacer(modifier = Modifier.height(20.dp))
@@ -434,13 +425,13 @@ fun PodCard(
                         ) {
                             Surface(
                                 shape = CircleShape,
-                                color = Purple0, // Very light purple
+                                color = Purple0,
                                 modifier = Modifier.padding(end = 8.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Payment,
                                     contentDescription = null,
-                                    tint = PurpleDeep, // Deep purple
+                                    tint = PurpleDeep,
                                     modifier = Modifier
                                         .padding(8.dp)
                                         .size(16.dp)
@@ -451,14 +442,13 @@ fun PodCard(
                                 text = "Payment Details",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Medium,
-                                color = Color.Black // Explicitly set to black for visibility
+                                color = Color.Black
                             )
                         }
 
-                        // Total amount row with Apple-like styling
                         Surface(
                             shape = RoundedCornerShape(10.dp),
-                            color = Purple0, // Very light purple background
+                            color = Purple0,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
@@ -474,21 +464,21 @@ fun PodCard(
                                     text = "Total Amount",
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Medium,
-                                    color = Color.DarkGray // Dark gray for visibility
+                                    color = Color.DarkGray
                                 )
                                 
                                 Row(verticalAlignment = CenterVertically) {
                                     Icon(
                                         imageVector = Icons.Filled.CurrencyPound,
                                         contentDescription = null,
-                                        tint = Gray, // Gray
+                                        tint = Gray,
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Text(
                                         text = "${pod.totalAmount}",
                                         style = MaterialTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = Color.Black // Explicitly set to black for visibility
+                                        color = Color.Black
                                     )
                                 }
                             }
@@ -496,7 +486,6 @@ fun PodCard(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Split type badge above Your Share section
                         if (pod.splitType.isNotBlank()) {
                             Row(
                                 modifier = Modifier
@@ -529,7 +518,6 @@ fun PodCard(
                             }
                         }
                         
-                        // Your share row with Apple-like styling
                         Surface(
                             shape = RoundedCornerShape(10.dp),
                             color = Purple20, // Light purple
@@ -548,7 +536,7 @@ fun PodCard(
                                     text = "Your Share",
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Medium,
-                                    color = Color.Black // Explicitly set to black for visibility
+                                    color = Color.Black
                                 )
                                 
                                 Row(verticalAlignment = CenterVertically) {
@@ -568,18 +556,16 @@ fun PodCard(
                             }
                         }
 
-                        // Items Section with enhanced styling
                         if (pod.items.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(20.dp))
-                            
-                            Divider(
-                                color = Purple20, // Light purple divider
-                                thickness = 0.5.dp // Apple uses very thin dividers
+
+                            HorizontalDivider(
+                                thickness = 0.5.dp,
+                                color = Purple20
                             )
                             
                             Spacer(modifier = Modifier.height(20.dp))
 
-                            // Items header with icon
                             Row(
                                 verticalAlignment = CenterVertically,
                                 modifier = Modifier.padding(bottom = 12.dp)
@@ -667,8 +653,8 @@ fun PodCard(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(44.dp), // Apple uses 44dp height for buttons
-                            shape = RoundedCornerShape(10.dp), // Apple uses slightly less rounded corners
+                                .height(44.dp),
+                            shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = PurpleDeep, // Deep purple
                                 disabledContainerColor = Gray.copy(alpha = 0.5f)
@@ -690,11 +676,7 @@ fun PodCard(
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                // Determine the button text based on pod state and payment status
-                                // We need to distinguish between:
-                                // 1. User has paid (button should say "Already Paid")
-                                // 2. Pod is inactive but user hasn't paid (button should say "Pod Closed")
-                                // 3. Pod is active and user can pay (button should say "Pay Now")
+
                                 Text(
                                     text = when {
                                         !pod.isActive && !paymentEnabled -> "Pod Closed" // Pod is inactive (closed by admin)
@@ -714,17 +696,7 @@ fun PodCard(
 }
 
 
-/**
- * PodsList displays a list of payment pods, with an optional active pod at the top.
- * 
- * @param activePod The currently active pod (if any)
- * @param podListItems List of previous pods to display
- * @param expandedPodId ID of the currently expanded pod card
- * @param onExpandPod Callback when a pod card is expanded/collapsed
- * @param onPayNow Callback when the Pay Now button is clicked
- * @param modifier Modifier for styling
- * @param paymentAllowed Whether payment is currently allowed (from ViewModel)
- */
+
 @Composable
 fun PodsList(
     activePod: PodListItem?,

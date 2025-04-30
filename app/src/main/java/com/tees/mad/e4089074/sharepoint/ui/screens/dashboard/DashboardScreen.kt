@@ -1,5 +1,7 @@
 package com.tees.mad.e4089074.sharepoint.ui.screens.dashboard
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,6 +31,7 @@ import com.tees.mad.e4089074.sharepoint.viewmodels.AuthViewModel
 import com.tees.mad.e4089074.sharepoint.viewmodels.PaymentPodViewModel
 import com.tees.mad.e4089074.sharepoint.viewmodels.ProfileViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,

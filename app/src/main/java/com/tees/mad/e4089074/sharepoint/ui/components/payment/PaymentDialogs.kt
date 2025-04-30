@@ -11,69 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.tees.mad.e4089074.sharepoint.ui.theme.PurpleDeep
 
 @Composable
-fun JoinPodDialog(
-    podCode: String,
-    isError: Boolean,
-    onPodCodeChange: (String) -> Unit,
-    onDismiss: () -> Unit,
-    onScanQrCode: () -> Unit,
-    onJoin: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Join a Payment Pod") },
-        text = {
-            Column {
-                Text(
-                    "Enter the pod code provided by the pod creator or scan the QR code.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                OutlinedTextField(
-                    value = podCode,
-                    onValueChange = onPodCodeChange,
-                    label = { Text("Pod Code") },
-                    isError = isError,
-                    supportingText = if (isError) {
-                        { Text("Please enter a valid pod code") }
-                    } else null,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Button(
-                    onClick = onScanQrCode,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                ) {
-                    Text("Scan QR Code")
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onJoin,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = PurpleDeep
-                )
-            ) {
-                Text("Join")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}
-
-@Composable
 fun CustomAmountDialog(
     customAmountText: String,
     isCustomAmountError: Boolean,
